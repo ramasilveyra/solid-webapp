@@ -1,0 +1,5 @@
+# www.robotstxt.org/
+
+# Permite a los buscadores acceder a todo el contenido
+User-agent: *
+Disallow:

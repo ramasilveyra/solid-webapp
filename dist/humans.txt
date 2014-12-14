@@ -1,0 +1,12 @@
+
+                        /* EQUIPO */
+
+    Desarrollador y diseñador web: Ramiro Silveyra d'Avila
+    Sitio: https://ramasilveyra.com.ar/
+    Twitter: @ramasilveyra
+    Localidad: Paraná, Entre Ríos, Argentina
+
+                        /* SITIO */
+
+    HTML5, CSS3, JavaScript, PHP, y MySQL
+    Normalize.css, jQuery, Modernizr
