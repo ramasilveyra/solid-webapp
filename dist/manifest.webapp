@@ -1,0 +1,14 @@
+{
+	"version": "1.0",
+	"name": "solid-webapp",
+	"description": "Base para proyectos web.",
+	"icons": {
+		"60": "assets\/media\/favicons\/firefox_app_60x60.png",
+		"128": "assets\/media\/favicons\/firefox_app_128x128.png",
+		"512": "assets\/media\/favicons\/firefox_app_512x512.png"
+	},
+	"developer": {
+		"name": "Ramiro Silveyra d'Avila",
+		"url": "http:\/\/ramasilveyra.com.ar\/"
+	}
+}
