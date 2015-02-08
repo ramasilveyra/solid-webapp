@@ -8,8 +8,10 @@ Basic and solid Development and Production enviroment and file structured for we
 2. Node.js and Git.
 3. bower and gulp.js globally installed.
 4. Download the latest stable release of Solid Webapp.
-4. Run in node prompt `npm install --save-dev gulp browser-sync gulp-load-plugins run-sequence gulp-jshint gulp-uglify gulp-concat gulp-csso gulp-imagemin gulp-watch` and `bower install --save jquery modernizr normalize.css`.
-5. Run `gulp` see the magic and start develop. 
+5. Run in node prompt `npm install --save-dev gulp browser-sync gulp-load-plugins run-sequence gulp-jshint gulp-uglify gulp-concat gulp-csso gulp-imagemin gulp-watch gulp-fontgen gulp-sass gulp-autoprefixer gulp-rename gulp-favicons gulp-rimraf` and `bower install --save jquery modernizr normalize.css`.
+6. Run `gulp` see the magic and start develop.
+
+(From here the docs are outdated, awaiting the update and extend of docs)
 
 ## Development enviroment
 The development enviroment is all the content of `_assets/` is the raw code before minification or concatenation or some other compilation. The CSS and JS files are concatenated and minified, and the images are lossless compressed via gulp.js to the Production enviroment in `dist/assets/`.
@@ -19,20 +21,20 @@ The production enviroment is all the content of `dist/` folder, is the webapp/we
 
 ## Folder structure
 
-* `_assets/`: Source files for everything used by the front-end, this includes all public asset files. 
-    * `css/`: For all CSS files.
+* `_assets/`: Source files for everything used by the front-end, this includes all public asset files.
+    * `styles/`: For all CSS files.
     * `js/`: For all JS files.
-    * `font/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
+    * `fonts/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
     * `media/`: For all images and video files.
 * `docs/`: This directory contains documentation.
 * `dist/`: This is the directory for develop your webapp.
   * `app/`: This directory contains your application. Inside this folder create the folder structure according to your design pattern (MVC, MVVM, MVP or a modular approach).
   * `assets/`: This includes all public asset files. Remember that this directory is generated via gulp.js.
-    * `css/`: For all CSS files.
+    * `styles/`: For all CSS files.
     * `js/`: For all JS files.
-    * `font/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
+    * `fonts/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
     * `media/`: For all images and video files.
-  * `data/`: This directory provides a place to store application data that is volatile and possibly temporary. 
+  * `data/`: This directory provides a place to store application data that is volatile and possibly temporary.
     * `cache/`: For cache files.
     * `logs/`: For logs files.
     * `sessions/`: For session files.

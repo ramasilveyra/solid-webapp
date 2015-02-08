@@ -1,0 +1,21 @@
+/*
+ * Modelo de cajas
+ */
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+:focus {
+  outline: thin dotted;
+}
+
+body {
+    font-family: 'Open Sans';
+}

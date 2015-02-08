@@ -1,0 +1,67 @@
+/*
+ * Contenedor
+ */
+
+%container {
+  margin: auto;
+  max-width: 1336px;
+  width: 94%;
+}
+
+/*
+ * Alinear verticalmente con tablas
+ */
+
+%valign-table {
+  display: table;
+  width: 100%;
+  & > * {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
+
+/*
+ * Reemplazar texto por imagenes
+ */
+
+%ir {
+  color: transparent;
+  font: 0/0 a;
+  text-shadow: none;
+}
+
+/*
+ * Limpiador de listas y enlaces
+ */
+
+%clean-list {
+  list-style: none;
+  margin-bottom: 0;
+  margin-top: 0;
+  padding: 0;
+  a {
+    @extend %clean-link;
+  }
+}
+
+%clean-link {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+/*
+ * Clearfix: contenedores de floats
+ */
+
+%clearfix {
+  &::before,
+  &::after {
+    content: " ";
+    display: table;
+  }
+  &::after {
+    clear: both;
+  }
+}

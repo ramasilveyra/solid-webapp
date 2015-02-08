@@ -8,5 +8,5 @@
 
                         /* SITIO */
 
-    HTML5, CSS3, JavaScript, PHP, y MySQL
+    HTML5, CSS3, JavaScript
     Normalize.css, jQuery, Modernizr

@@ -6,14 +6,22 @@
         <title>Solid Webapp</title>
         <meta name="description" content="Solid Webapp is a basic and solid Development and Production enviroment and file structured for web projects based on LEMP/LAMP stack." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="assets/css/main.min.css" />
-        <script src="assets/js/vendor/modernizr.js"></script>
+        <link rel="manifest" href="manifest.json">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+        <meta property="og:image" content="assets/media/favicons/open-graph.png">
+        <link rel="yandex-tableau-widget" href="yandex-browser-manifest.json">
+        <meta name="theme-color" content="#ffffff">
+        <link rel="stylesheet" href="assets/styles/main.min.css" />
     </head>
     <body>
-        <!--[if lt IE 8]><p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+        <!--[if lt IE 8]><p class="browserupgrade">Usted está usando una versión <strong>antigua</strong> de su navegador. Por favor <a href="http://outdatedbrowser.com/es">actualice su navegador</a> para mejorar la experiencia.</p><![endif]-->
+        <h1>¡Bienvenidos a Solid Webapp!</h1>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>');</script>
-        <script src="assets/js/main.min.js"></script>
+        <script>window.jQuery || document.write('<script src="assets/scripts/vendor/jquery.min.js"><\/script>');</script>
+        <script src="assets/scripts/main.min.js"></script>
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;

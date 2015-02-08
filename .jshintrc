@@ -1,0 +1,41 @@
+{
+
+  // Adds
+  "camelcase": true,
+  "curly": true,
+  "immed": true,
+  "indent": 2,
+  "newcap": true,
+  "quotmark": "single",
+  "strict": true,
+
+  // Enforcing options
+  // http://www.jshint.com/docs/options/#enforcing-options
+
+  "bitwise": true,
+  "eqeqeq": true,
+  "forin": true,
+  "latedef": true,
+  "noarg": true,
+  "nonbsp": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  // Relaxing options
+  // http://www.jshint.com/docs/options/#relaxing-options
+
+  "esnext": true,
+
+  // - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+  // Environments
+  // http://www.jshint.com/docs/options/#environments
+
+  "browser": true,
+  "jquery": true,
+  "node": true
+
+}

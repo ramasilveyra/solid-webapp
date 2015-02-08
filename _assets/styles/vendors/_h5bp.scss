@@ -1,4 +1,4 @@
-/*! HTML5 Boilerplate v4.3.0 | MIT License | http://h5bp.com/ */
+/*! HTML5 Boilerplate v5.0.0 | MIT License | http://h5bp.com/ */
 
 /*
  * What follows is the result of much research on cross-browser styling.
@@ -92,77 +92,9 @@ textarea {
 }
 
 /* ==========================================================================
-   Solid Webapp adds to H5BP
-   ========================================================================== */
-
-:focus {
-    outline: thin dotted;
-}
-
-/*
- * Modelo de cajas
- */
-html {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-    -webkit-box-sizing: inherit;
-       -moz-box-sizing: inherit;
-            box-sizing: inherit;
-}
-
-
-/*
- * Videos de YouTube y Vimeo elasticos
- */
-
-.elastic-video {
-    height: 0;
-    overflow: hidden;
-    padding-bottom: 56.25%; /* Se obtiene una relación de 16:9, para una relación de aspecto 4:3 colocar 75% */
-    padding-top: 30px; /* Para videos de YouTube*/
-    position: relative;
-}
-
-.elastic-video iframe,
-.elastic-video object,
-.elastic-video embed {
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-}
-
-/*
- * Reemplazar texto por imagenes
- */
-
-.ir {
-    color: transparent;
-    font: 0/0 a;
-    text-shadow: none;
-}
-
-/* ==========================================================================
    Author's custom styles
    ========================================================================== */
 
-@font-face {
-    font-family: "Open Sans";
-    font-style: normal;
-    font-weight: 400;
-    src: url("../font/opensans-regular.eot");
-    src: url("../font/opensans-regular.eot?#iefix") format("embedded-opentype"),
-         url("../font/opensans-regular.woff") format("woff"),
-         url("../font/opensans-regular.ttf") format("truetype"),
-         url("../font/opensans-regular.svg#open_sansregular") format("svg");
-}
 
 
 
