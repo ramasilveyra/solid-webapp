@@ -6,7 +6,8 @@ var gulp = require('gulp'),
     reload = browserSync.reload,
     pkg = require('./package.json'),
     runSequence = require('run-sequence'),
-    fs = require('fs');
+    fs = require('fs'),
+    del = require('del');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 9',
@@ -25,7 +26,7 @@ var AUTOPREFIXER_BROWSERS = [
  */
 
 gulp.task('js', function() {
-  return gulp.src(['./_assets/scripts/*.js',  './bower_components/modernizr/modernizr.js'])
+  return gulp.src(['./_assets/scripts/*.js'])
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('default'))
     .pipe(plugins.uglify())
@@ -33,10 +34,29 @@ gulp.task('js', function() {
     .pipe(gulp.dest('./dist/assets/scripts'));
 });
 
-gulp.task('js:lib', function() {
+gulp.task('js:lib-concat', function() {
+  return gulp.src(['./dist/assets/scripts/main.min.js', './bower_components/modernizr/modernizr.js'])
+    .pipe(plugins.concat('main.min.js'))
+    .pipe(plugins.if('!*.min.js', plugins.uglify()))
+    .pipe(gulp.dest('./dist/assets/scripts'));
+});
+
+gulp.task('js:lib-sep', function() {
   return gulp.src(['./bower_components/jquery/dist/jquery.min.js'])
     .pipe(gulp.dest('./dist/assets/scripts/vendor'));
 });
+
+gulp.task('js:fonts', function() {
+  return gulp.src('./dist/assets/styles/main.min.css')
+    .pipe(plugins.avoidfoit())
+    .pipe(plugins.rename({
+      basename: 'typography',
+      extname: '.js'
+    }))
+    .pipe(plugins.uglify())
+    .pipe(gulp.dest('./dist/assets/scripts/vendor'));
+});
+
 
 /**
  * Compila SASS, valida, minifica, y concatena los archivos CSS
@@ -142,11 +162,10 @@ gulp.task('favicons:copy', function () {
     .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('favicons:trash', function () {
+gulp.task('favicons:trash', function (done) {
   var copyArray = rootFavicons;
   copyArray.push(pathRootFavicons + 'apple-touch-icon*.png', pathRootFavicons + 'favicon-*.png','./dist/meta.html');
-  return gulp.src(copyArray)
-    .pipe(plugins.rimraf());
+  del(copyArray, done);
 });
 
 /**
@@ -154,14 +173,31 @@ gulp.task('favicons:trash', function () {
  */
 
 gulp.task('serve', function() {
-  browserSync({
-    proxy: 'localhost/',
-    startPath: pkg.name + '/dist/',
-    logPrefix: pkg.name
-  });
+  if (!browserSync.active) {
+    browserSync({
+      proxy: 'localhost/',
+      startPath: pkg.name + '/dist/',
+      logPrefix: pkg.name
+    });
+  }
+});
 
+/**
+ * Actualiza los navegadores conectados a browserSync
+ */
+
+gulp.task('serve:reload', function () {
+  return reload();
+});
+
+
+/**
+ * Inicia browserSync y comienza a vigilar los archivos
+ */
+
+gulp.task('watch', function () {
   plugins.watch('./_assets/scripts/**/*.js', function () {
-    runSequence('js', 'serve:reload');
+    runSequence('js', 'js:lib-concat', 'serve:reload');
   });
   plugins.watch('./_assets/styles/**/*.+(css|scss|sass)', function () {
     runSequence('css');
@@ -175,14 +211,9 @@ gulp.task('serve', function() {
   plugins.watch(['./dist/**/*.+(php|html)'], function () {
     runSequence('serve:reload');
   });
-});
-
-/**
- * Actualiza los navegadores conectados a browserSync
- */
-
-gulp.task('serve:reload', function() {
-  return reload();
+  plugins.watch(['./dist/assets/styles/main.min.css'], function () {
+    runSequence('js:fonts');
+  });
 });
 
 /**
@@ -190,7 +221,7 @@ gulp.task('serve:reload', function() {
  */
 
 gulp.task('build', function() {
-  runSequence('css:copy', ['css', 'js', 'js:lib', 'fonts', 'images', 'favicons'], 'serve:reload');
+  runSequence('css:copy', ['css', 'js', 'js:lib-sep', 'fonts', 'images', 'favicons'], 'js:lib-concat');
 });
 
 /**
@@ -198,5 +229,5 @@ gulp.task('build', function() {
  */
 
 gulp.task('default', function() {
-  runSequence('build', 'serve');
+  runSequence('build', 'serve', 'watch');
 });
