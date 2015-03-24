@@ -48,7 +48,8 @@
   "requireSpaceBeforeBinaryOperators": true,
   "requireSpaceBeforeBlockStatements": true,
   "requireSpacesInAnonymousFunctionExpression": {
-    "beforeOpeningCurlyBrace": true
+   "beforeOpeningRoundBrace": true,
+   "beforeOpeningCurlyBrace": true
   },
   "requireSpacesInConditionalExpression": true,
   "requireSpacesInFunctionDeclaration": {
@@ -64,6 +65,6 @@
   "validateIndentation": 2,
   "validateLineBreaks": "LF",
   "validateParameterSeparator": ", ",
-  "validateQuoteMarks": "'",,
+  "validateQuoteMarks": "'",
   "excludeFiles": ["node_modules/**"]
 }

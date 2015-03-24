@@ -25,8 +25,8 @@ var AUTOPREFIXER_BROWSERS = [
  * Valida, minifica, y concatena los archivos JavaScript
  */
 
-gulp.task('js', function() {
-  return gulp.src(['./_assets/scripts/*.js'])
+gulp.task('js', function () {
+  return gulp.src(['./src/assets/scripts/*.js'])
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('default'))
     .pipe(plugins.uglify())
@@ -34,19 +34,19 @@ gulp.task('js', function() {
     .pipe(gulp.dest('./dist/assets/scripts'));
 });
 
-gulp.task('js:lib-concat', function() {
+gulp.task('js:lib-concat', function () {
   return gulp.src(['./dist/assets/scripts/main.min.js', './bower_components/modernizr/modernizr.js'])
     .pipe(plugins.concat('main.min.js'))
     .pipe(plugins.if('!*.min.js', plugins.uglify()))
     .pipe(gulp.dest('./dist/assets/scripts'));
 });
 
-gulp.task('js:lib-sep', function() {
+gulp.task('js:lib-sep', function () {
   return gulp.src(['./bower_components/jquery/dist/jquery.min.js'])
     .pipe(gulp.dest('./dist/assets/scripts/vendor'));
 });
 
-gulp.task('js:fonts', function() {
+gulp.task('js:fonts', function () {
   return gulp.src('./dist/assets/styles/main.min.css')
     .pipe(plugins.avoidfoit())
     .pipe(plugins.rename({
@@ -62,17 +62,17 @@ gulp.task('js:fonts', function() {
  * Compila SASS, valida, minifica, y concatena los archivos CSS
  */
 
-gulp.task('css:copy', function() {
+gulp.task('css:copy', function () {
   return gulp.src(['./bower_components/normalize.css/normalize.css'])
     .pipe(plugins.rename({
       prefix: '_',
       extname: '.scss'
     }))
-    .pipe(gulp.dest('./_assets/styles/vendors'));
+    .pipe(gulp.dest('./src/assets/styles/vendors'));
 });
 
-gulp.task('css', function() {
-  return gulp.src('./_assets/styles/main.scss')
+gulp.task('css', function () {
+  return gulp.src('./src/assets/styles/main.scss')
     .pipe(plugins.sass({
       precision: 10,
       onError: console.error.bind(console, 'Sass error:')
@@ -90,8 +90,8 @@ gulp.task('css', function() {
  * Comprime imagenes
  */
 
-gulp.task('images', function() {
-  return gulp.src(['./_assets/media/**/*.+(png|jpg|jpeg|gif|svg)'])
+gulp.task('images', function () {
+  return gulp.src(['./src/assets/media/**/*.+(png|jpg|jpeg|gif|svg)'])
     .pipe(plugins.imagemin({
         progressive: true,
         interlaced: true
@@ -107,12 +107,12 @@ gulp.task('fonts', function () {
   /*
    * gulp-fontgen solo esta probado en OS X
    *
-  return gulp.src(['./_assets/fonts/*.+(ttf|otf)'])
+  return gulp.src(['./src/assets/fonts/*.+(ttf|otf)'])
     .pipe(plugins.fontgen({
       dest: './dist/fonts/'
     }));
   */
-  return gulp.src(['./_assets/fonts/*.+(ttf|otf|woff|woff2|eot|svg|css)'])
+  return gulp.src(['./src/assets/fonts/*.+(ttf|otf|woff|woff2|eot|svg|css)'])
     .pipe(gulp.dest('./dist/assets/fonts'));
 });
 
@@ -129,7 +129,7 @@ gulp.task('favicons:generate', function () {
   return gulp.src('./dist/meta.html') // Pequeño hack para que no inserte HTML
     .pipe(plugins.favicons({
       files: {
-        src: './_assets/sources/favicon.jpg',
+        src: './src/assets/sources/favicon.jpg',
         dest: 'assets/media/favicons/',
         iconsPath: 'assets/media/favicons/'
       },
@@ -172,7 +172,7 @@ gulp.task('favicons:trash', function (done) {
  * Inicia browserSync y comienza a vigilar los archivos
  */
 
-gulp.task('serve', function() {
+gulp.task('serve', function () {
   if (!browserSync.active) {
     browserSync({
       proxy: 'localhost/',
@@ -196,16 +196,16 @@ gulp.task('serve:reload', function () {
  */
 
 gulp.task('watch', function () {
-  plugins.watch('./_assets/scripts/**/*.js', function () {
+  plugins.watch('./src/assets/scripts/**/*.js', function () {
     runSequence('js', 'js:lib-concat', 'serve:reload');
   });
-  plugins.watch('./_assets/styles/**/*.+(css|scss|sass)', function () {
+  plugins.watch('./src/assets/styles/**/*.+(css|scss|sass)', function () {
     runSequence('css');
   });
-  plugins.watch('./_assets/media/**/*.+(png|jpg|jpeg|gif|svg)', function () {
+  plugins.watch('./src/assets/media/**/*.+(png|jpg|jpeg|gif|svg)', function () {
     runSequence('images', 'serve:reload');
   });
-  plugins.watch('./_assets/fonts/**/*.+(ttf|otf|woff|woff2|eot|svg|css)', function () {
+  plugins.watch('./src/assets/fonts/**/*.+(ttf|otf|woff|woff2|eot|svg|css)', function () {
     runSequence('fonts', 'serve:reload');
   });
   plugins.watch(['./dist/**/*.+(php|html)'], function () {
@@ -220,7 +220,7 @@ gulp.task('watch', function () {
  * Construye la app
  */
 
-gulp.task('build', function() {
+gulp.task('build', function () {
   runSequence('css:copy', ['css', 'js', 'js:lib-sep', 'fonts', 'images', 'favicons'], 'js:lib-concat');
 });
 
@@ -228,6 +228,6 @@ gulp.task('build', function() {
  * Tarea por defecto
  */
 
-gulp.task('default', function() {
+gulp.task('default', function () {
   runSequence('build', 'serve', 'watch');
 });
