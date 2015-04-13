@@ -1,13 +1,13 @@
 'use strict';
 
-var gulp = require('gulp'),
-    plugins = require('gulp-load-plugins')(),
-    browserSync = require('browser-sync'),
-    reload = browserSync.reload,
-    pkg = require('./package.json'),
-    runSequence = require('run-sequence'),
-    fs = require('fs'),
-    del = require('del');
+var gulp = require('gulp');
+var plugins = require('gulp-load-plugins')();
+var browserSync = require('browser-sync');
+var reload = browserSync.reload;
+var pkg = require('./package.json');
+var runSequence = require('run-sequence');
+var fs = require('fs');
+var del = require('del');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 9',
@@ -26,23 +26,28 @@ var AUTOPREFIXER_BROWSERS = [
  */
 
 gulp.task('js', function () {
-  return gulp.src(['./src/assets/scripts/*.js'])
+  return gulp.src(['./src/assets/scripts/main.js'])
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.jscs())
     .pipe(plugins.jshint())
-    .pipe(plugins.jshint.reporter('default'))
+    .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.uglify())
-    .pipe(plugins.concat('main.min.js'))
+    .pipe(plugins.rename({
+      suffix: '.min'
+    }))
+    .pipe(plugins.sourcemaps.write('../maps'))
     .pipe(gulp.dest('./dist/assets/scripts'));
 });
 
 gulp.task('js:lib-concat', function () {
-  return gulp.src(['./dist/assets/scripts/main.min.js', './bower_components/modernizr/modernizr.js'])
-    .pipe(plugins.concat('main.min.js'))
+  return gulp.src(['./src/assets/scripts/plugins.js', './dist/assets/scripts/vendor/typography.js', './bower_components/modernizr/modernizr.js'])
     .pipe(plugins.if('!*.min.js', plugins.uglify()))
+    .pipe(plugins.concat('plugins.min.js'))
     .pipe(gulp.dest('./dist/assets/scripts'));
 });
 
 gulp.task('js:lib-sep', function () {
-  return gulp.src(['./bower_components/jquery/dist/jquery.min.js'])
+  return gulp.src(['./bower_components/jquery/dist/jquery.min.js', './bower_components/jquery/dist/jquery.min.map'])
     .pipe(gulp.dest('./dist/assets/scripts/vendor'));
 });
 
@@ -73,17 +78,19 @@ gulp.task('css:copy', function () {
 
 gulp.task('css', function () {
   return gulp.src('./src/assets/styles/main.scss')
+    .pipe(plugins.sourcemaps.init())
     .pipe(plugins.sass({
       precision: 10,
       onError: console.error.bind(console, 'Sass error:')
     }))
-    .pipe(plugins.autoprefixer({browsers: AUTOPREFIXER_BROWSERS}))
-    .pipe(plugins.csso())
+    .pipe(plugins.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
     .pipe(plugins.rename({
       suffix: '.min'
     }))
+    .pipe(plugins.sourcemaps.write())
+    .pipe(plugins.csso())
     .pipe(gulp.dest('./dist/assets/styles'))
-    .pipe(reload({stream:true}));
+    .pipe(reload({ stream:true }));
 });
 
 /**
@@ -92,10 +99,10 @@ gulp.task('css', function () {
 
 gulp.task('images', function () {
   return gulp.src(['./src/assets/media/**/*.+(png|jpg|jpeg|gif|svg)'])
-    .pipe(plugins.imagemin({
+    .pipe(plugins.cache(plugins.imagemin({
         progressive: true,
         interlaced: true
-    }))
+    })))
     .pipe(gulp.dest('./dist/assets/media'));
 });
 
@@ -120,8 +127,12 @@ gulp.task('fonts', function () {
  * Genera los favicons
  */
 gulp.task('favicons', function () {
-  return fs.writeFile('./dist/meta.html', '<html><head></head></html>', function(err) {
-    err ? console.log(err) : runSequence('favicons:generate', 'favicons:copy', 'favicons:trash');
+  return fs.writeFile('./dist/meta.html', '<html><head></head></html>', function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      runSequence('favicons:generate', 'favicons:copy', 'favicons:trash');
+    }
   });
 });
 
@@ -164,7 +175,7 @@ gulp.task('favicons:copy', function () {
 
 gulp.task('favicons:trash', function (done) {
   var copyArray = rootFavicons;
-  copyArray.push(pathRootFavicons + 'apple-touch-icon*.png', pathRootFavicons + 'favicon-*.png','./dist/meta.html');
+  copyArray.push(pathRootFavicons + 'apple-touch-icon*.png', pathRootFavicons + 'favicon-*.png', './dist/meta.html');
   del(copyArray, done);
 });
 
@@ -212,7 +223,7 @@ gulp.task('watch', function () {
     runSequence('serve:reload');
   });
   plugins.watch(['./dist/assets/styles/main.min.css'], function () {
-    runSequence('js:fonts');
+    runSequence('js:fonts', 'js:lib-concat');
   });
 });
 
