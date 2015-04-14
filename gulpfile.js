@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var plugins = require('gulp-load-plugins')();
+var stylish = require('gulp-jscs-stylish');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var pkg = require('./package.json');
@@ -28,8 +29,9 @@ var AUTOPREFIXER_BROWSERS = [
 gulp.task('js', function () {
   return gulp.src(['./src/assets/scripts/main.js'])
     .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.jscs())
     .pipe(plugins.jshint())
+    .pipe(plugins.jscs()).on('error', function () {})
+    .pipe(stylish.combineWithHintResults())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.uglify())
     .pipe(plugins.rename({
