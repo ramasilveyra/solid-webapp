@@ -30,7 +30,9 @@ gulp.task('js', function () {
   return gulp.src(['./src/assets/scripts/main.js'])
     .pipe(plugins.sourcemaps.init())
     .pipe(plugins.jshint())
-    .pipe(plugins.jscs()).on('error', function () {})
+    .pipe(plugins.jscs())
+    // Metete el error de node/io en el culo si hay algo mal en mi js. Solo quiero una advertencia.
+    .on('error', function () {})
     .pipe(stylish.combineWithHintResults())
     .pipe(plugins.jshint.reporter('jshint-stylish'))
     .pipe(plugins.uglify())
@@ -89,8 +91,8 @@ gulp.task('css', function () {
     .pipe(plugins.rename({
       suffix: '.min'
     }))
-    .pipe(plugins.sourcemaps.write())
-    .pipe(plugins.csso())
+    .pipe(plugins.sourcemaps.write('../maps'))
+    .pipe(plugins.if('*.css', plugins.csso()))
     .pipe(gulp.dest('./dist/assets/styles'))
     .pipe(reload({ stream:true }));
 });
@@ -209,8 +211,11 @@ gulp.task('serve:reload', function () {
  */
 
 gulp.task('watch', function () {
-  plugins.watch('./src/assets/scripts/**/*.js', function () {
-    runSequence('js', 'js:lib-concat', 'serve:reload');
+  plugins.watch('./src/assets/scripts/main.js', function () {
+    runSequence('js', 'serve:reload');
+  });
+  plugins.watch('./src/assets/scripts/plugins.js', function () {
+    runSequence('js:lib-concat', 'serve:reload');
   });
   plugins.watch('./src/assets/styles/**/*.+(css|scss|sass)', function () {
     runSequence('css');
@@ -221,11 +226,14 @@ gulp.task('watch', function () {
   plugins.watch('./src/assets/fonts/**/*.+(ttf|otf|woff|woff2|eot|svg|css)', function () {
     runSequence('fonts', 'serve:reload');
   });
+  plugins.watch('./src/assets/scripts/main.js', function () {
+    runSequence('js', 'serve:reload');
+  });
   plugins.watch(['./dist/**/*.+(php|html)'], function () {
     runSequence('serve:reload');
   });
-  plugins.watch(['./dist/assets/styles/main.min.css'], function () {
-    runSequence('js:fonts', 'js:lib-concat');
+  plugins.watch(['./src/assets/sources/favicon.+(jpg|png)'], function () {
+    runSequence('favicons');
   });
 });
 
