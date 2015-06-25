@@ -33,7 +33,7 @@ gulp.task('scripts', () =>
     .pipe(gulp.dest('./dist/assets/scripts'))
 );
 
-gulp.task('scripts:plugins', ['scripts:fonts'], () =>
+gulp.task('scripts:plugins', ['scripts:fonts', 'scripts:vendor'], () =>
   gulp.src(['./src/assets/scripts/plugins.js', './dist/assets/scripts/vendor/typography.min.js'])
     .pipe($.if('!*.min.js', $.uglify()))
     .pipe($.concat('plugins.min.js'))
@@ -87,15 +87,14 @@ gulp.task('styles', () => {
   return gulp.src('./src/assets/styles/main.scss')
     .pipe($.sourcemaps.init())
     .pipe($.sass({
-      precision: 10,
-      onError: console.error.bind(console, 'Sass error:')
-    }))
+      precision: 10
+    })).on('error', $.sass.logError))
     .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
     .pipe($.rename({
       suffix: '.min'
     }))
+    .pipe($.if('*.css', $.minifyCss()))
     .pipe($.sourcemaps.write('../maps'))
-    .pipe($.if('*.css', $.csso()))
     .pipe(gulp.dest('./dist/assets/styles'))
     .pipe($.if(bs.active, bs.stream()));
 });
