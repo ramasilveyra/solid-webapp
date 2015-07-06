@@ -1,44 +1,54 @@
-Solid Webapp
-============
+# Solid Webapp
 
 Basic and solid Development and Production enviroment and file structured for web projects based on LEMP/LAMP stack.
 
 ## Quick start
 1. LEMP/LAMP stack runnig.
 2. Node.js and Git.
-3. bower and gulp.js globally installed.
-4. Download the latest stable release of Solid Webapp.
-5. Run in node prompt `npm install --save-dev gulp browser-sync gulp-load-plugins run-sequence gulp-jshint gulp-uglify gulp-concat gulp-csso gulp-imagemin gulp-watch gulp-fontgen gulp-sass gulp-autoprefixer gulp-rename gulp-favicons gulp-rimraf` and `bower install --save jquery modernizr normalize.css`.
+3. bower, gulp.js, JSCS and JSHint globally installed.
+4. Clone the repo.
+5. Run in node prompt `npm install --save-dev` and `bower install -S`.
 6. Run `gulp` see the magic and start develop.
 
-(From here the docs are outdated, awaiting the update and extend of docs)
+## Features
+### CSS
+* SASS and follow [Sass Guidelines](http://sass-guidelin.es/) structure
+* BEM ready
+* CSS Autoprefixing
+* Minify CSS with [clean-css](https://github.com/jakubpawlowicz/clean-css)
+* Safely load external fonts to avoid FOIT
+* Sourcemaps
+### JavaScript
+* ES6 ready with babelfy
+* Source JS lint with JSCS and JSHint
+* Minify with Uglify
+* Sourcemaps
+### Images
+* Lossless compression of svg png jpg and gif
+### Tests
+* Performance audit with PageSpeed Insights
+* Accessibility audit with a11y
+### Other
+* BrowserSync for synchronising URLs, interactions and code changes across multiple devices while develop
+* The gulpfile makes use of ES6 features by using Babel
+* A custom Modernizr build for feature detection and a polyfill for CSS Media Queries.
+* Automate Favicons generator for Home page icon for Android, iOS, Nokia, Firefox, Windows, Yandex Browser
+* An optimized Google Analytics snippet
 
-## Development enviroment
-The development enviroment is all the content of `_assets/` is the raw code before minification or concatenation or some other compilation. The CSS and JS files are concatenated and minified, and the images are lossless compressed via gulp.js to the Production enviroment in `dist/assets/`.
+## Support
+* IE9+, IE Mobile 10+
+* Firefox latest
+* Chrome latest
+* Safari latest
+* Opera latest
+* BlackBerry 10+
+* Android/Chrome 2.3+
 
-## Production enviroment
-The production enviroment is all the content of `dist/` folder, is the webapp/website ready for upload.
+## Inspiration
+* [HTML5 boilerplate](https://github.com/h5bp/html5-boilerplate)
+* [Mobile HTML5 boilerplate](https://github.com/h5bp/mobile-boilerplate)
+* [Web Starter Kit](https://github.com/google/web-starter-kit)
+* [gulp-starter](https://github.com/greypants/gulp-starter)
 
-## Folder structure
-
-* `_assets/`: Source files for everything used by the front-end, this includes all public asset files.
-    * `styles/`: For all CSS files.
-    * `js/`: For all JS files.
-    * `fonts/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
-    * `media/`: For all images and video files.
-* `docs/`: This directory contains documentation.
-* `dist/`: This is the directory for develop your webapp.
-  * `app/`: This directory contains your application. Inside this folder create the folder structure according to your design pattern (MVC, MVVM, MVP or a modular approach).
-  * `assets/`: This includes all public asset files. Remember that this directory is generated via gulp.js.
-    * `styles/`: For all CSS files.
-    * `js/`: For all JS files.
-    * `fonts/`: For all fonts (.svg, .woff, .woff2, .otf, .ttf).
-    * `media/`: For all images and video files.
-  * `data/`: This directory provides a place to store application data that is volatile and possibly temporary.
-    * `cache/`: For cache files.
-    * `logs/`: For logs files.
-    * `sessions/`: For session files.
-    * `uploads/`: For uploads files.
-  * `lib/`: This directory is for common libraries on which the back-end application depends.
-  * `workers/`: This directory contains maintenance and/or build scripts. Such scripts might include command line, cron, or phing build scripts that are not executed at runtime but are part of the correct functioning of the application.
-* `tests/`: This directory contains application tests.
+## License
+The code is available under the [MIT license](https://github.com/ramasilveyra/solid-webapp/blob/master/LICENSE.md).

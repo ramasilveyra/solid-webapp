@@ -1,7 +1,7 @@
 {
-	"version": "1.0",
+	"version": "0.9",
 	"name": "solid-webapp",
-	"description": "Base para proyectos web.",
+	"description": "Basic and solid boilerplate and file structured for web projects based on LEMP\/LAMP stack.",
 	"icons": {
 		"60": "assets\/media\/favicons\/firefox_app_60x60.png",
 		"128": "assets\/media\/favicons\/firefox_app_128x128.png",

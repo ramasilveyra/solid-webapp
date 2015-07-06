@@ -1,10 +1,10 @@
 {
   "name": "solid-webapp",
-  "version": "0.4.1",
+  "version": "0.9.1",
   "authors": [
     "Ramiro Silveyra d'Avila"
   ],
-  "description": "Base para proyectos web.",
+  "description": "Basic and solid boilerplate and file structured for web projects based on LEMP/LAMP stack.",
   "main": "dist/*",
   "keywords": [
     "web",
