@@ -11,6 +11,7 @@ Basic and solid Development and Production enviroment and file structured for we
 6. Run `gulp` see the magic and start develop.
 
 ## Features
+
 ### CSS
 * SASS and follow [Sass Guidelines](http://sass-guidelin.es/) structure
 * BEM ready
@@ -18,16 +19,20 @@ Basic and solid Development and Production enviroment and file structured for we
 * Minify CSS with [clean-css](https://github.com/jakubpawlowicz/clean-css)
 * Safely load external fonts to avoid FOIT
 * Sourcemaps
+
 ### JavaScript
 * ES6 ready with babelfy
 * Source JS lint with JSCS and JSHint
 * Minify with Uglify
 * Sourcemaps
+
 ### Images
 * Lossless compression of svg png jpg and gif
+
 ### Tests
 * Performance audit with PageSpeed Insights
 * Accessibility audit with a11y
+
 ### Other
 * BrowserSync for synchronising URLs, interactions and code changes across multiple devices while develop
 * The gulpfile makes use of ES6 features by using Babel
