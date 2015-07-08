@@ -1,5 +1,5 @@
 /*
- * Contenedor
+ * Container
  */
 
 %container {
@@ -9,20 +9,7 @@
 }
 
 /*
- * Alinear verticalmente con tablas
- */
-
-%valign-table {
-  display: table;
-  width: 100%;
-  & > * {
-    display: table-cell;
-    vertical-align: middle;
-  }
-}
-
-/*
- * Reemplazar texto por imagenes
+ * Image replacement
  */
 
 %ir {
@@ -32,7 +19,7 @@
 }
 
 /*
- * Limpiador de listas y enlaces
+ * Clean lists and links
  */
 
 %clean-list {
@@ -47,12 +34,11 @@
 
 %clean-link {
   color: inherit;
-  display: block;
   text-decoration: none;
 }
 
 /*
- * Clearfix: contenedores de floats
+ * Clearfix: floats container
  */
 
 %clearfix {

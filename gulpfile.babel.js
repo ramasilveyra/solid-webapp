@@ -2,54 +2,69 @@
 
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
-import fs from 'fs';
+import mainBowerFiles from 'main-bower-files';
 import del from 'del';
-import favicons from 'favicons';
 import runSequence from 'run-sequence';
+import favicons from 'favicons';
 import browserSync from 'browser-sync';
 import browserify from 'browserify';
 import babelify from 'babelify';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
 import ngrok from 'ngrok';
 import a11y from 'a11y';
 import {output as pagespeed} from 'psi';
-import source from 'vinyl-source-stream';
-import buffer from 'vinyl-buffer';
 import pkg from './package.json';
 
 const $ = gulpLoadPlugins();
 const bs = browserSync.create(pkg.name);
-
-// Paths for all common dirs
-const src = './src';
-const dist = './dist';
-const assets = '/assets';
+// Paths for all common dirs, change to fit your needs
 const paths = {
-  src,
-  dist,
-  assets: {
-    src: src + assets,
-    dist: dist + assets
-  },
-  scripts: {
-    src: src + assets + '/scripts',
-    dist: dist + assets + '/scripts'
-  },
-  styles: {
-    src: src + assets + '/styles',
-    dist: dist + assets + '/styles'
-  },
-  media: {
-    src: src + assets + '/media',
-    dist: dist + assets + '/media'
-  },
-  fonts: {
-    src: src + assets + '/fonts',
-    dist: dist + assets + '/fonts'
-  },
-  sources:  src + assets + '/sources',
-  favicons:  dist + assets + '/media/favicons/'
+  src: './src',
+  dist: './dist'
 };
+paths.assets = {
+  src: paths.src + '/assets',
+  dist: paths.dist + '/assets'
+};
+paths.scripts = {
+  src: paths.assets.src + '/scripts',
+  dist: paths.assets.dist + '/scripts'
+};
+paths.styles = {
+  src: paths.assets.src + '/styles',
+  dist: paths.assets.dist + '/styles'
+};
+paths.media = {
+  src: paths.assets.src + '/media',
+  dist: paths.assets.dist + '/media'
+};
+paths.fonts = {
+  src: paths.assets.src + '/fonts',
+  dist: paths.assets.dist + '/fonts'
+};
+paths.sources = paths.assets.src + '/sources';
+paths.favicons = paths.media.dist + '/favicons/';
+const rootFavicons = [
+  'manifest.json',
+  'favicon.ico',
+  'browserconfig.xml',
+  'manifest.webapp',
+  'yandex-browser-manifest.json',
+  'apple-touch-icon.png'
+].map(n => paths.favicons + n);
+let tunnelUrl = '';
 
+/**
+ * Adds files to the output of mainBowerFiles()
+ * @param  {array} filterGlobs Globs to filter main bower files
+ * @param  {array} customFiles Array of cfiles to add
+ * @return {array}             Result array of merge
+ */
+function customMainBowerFiles(filterGlobs, customFiles = []) {
+  const a = mainBowerFiles(filterGlobs);
+  return customFiles.concat(a);
+}
 
 /**
  * Tasks for JS
@@ -66,26 +81,31 @@ gulp.task('scripts', ['scripts:lint'], () =>
   .pipe(source('main.js'))
   .pipe(buffer())
   .pipe($.sourcemaps.init({ loadMaps: true }))
+  .pipe($.uglify())
   .pipe($.rename({
     suffix: '.min'
   }))
   .pipe($.sourcemaps.write('../maps'))
-  .pipe(gulp.dest(paths.scripts.src))
+  .pipe(gulp.dest(paths.scripts.dist))
 );
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
   gulp.src([paths.scripts.src + '/*.js', `!${paths.scripts.src}/plugins.js`])
-    .pipe($.jshint())
-    .pipe($.jscs({ esnext: true }))
-    .on('error', () => {})
-    .pipe($.jscsStylish.combineWithHintResults())
-    .pipe($.jshint.reporter('jshint-stylish'))
+    .pipe($.eslint())
+    .pipe($.eslint.format())
+    .pipe($.eslint.failOnError())
 );
 
 // Generates plugins.js file
 gulp.task('scripts:plugins', ['scripts:fonts', 'scripts:vendor'], () =>
-  gulp.src([paths.scripts.src + '/plugins.js', paths.scripts.dist + '/vendor/typography.min.js'])
+  gulp.src(customMainBowerFiles([
+    '**/*.js',
+    '!**/jquery.js'
+  ], [
+    paths.scripts.src + '/plugins.js',
+    paths.scripts.dist + '/vendor/typography.min.js'
+  ]))
     .pipe($.if('!*.min.js', $.uglify()))
     .pipe($.concat('plugins.min.js'))
     .pipe(gulp.dest(paths.scripts.dist))
@@ -107,11 +127,13 @@ gulp.task('scripts:fonts', () =>
 
 // Copy external JS code
 gulp.task('scripts:vendor', () =>
-  gulp.src([
-    './bower_components/jquery/dist/jquery.min.js',
-    './bower_components/jquery/dist/jquery.min.map',
-    paths.scripts.src + '/vendor/modernizr.min.js'
-  ])
+  gulp.src(customMainBowerFiles([
+    '**/jquery.js'
+  ], [
+    paths.scripts.dist + '/vendor/modernizr.min.js'
+  ]))
+    .pipe($.if('!*.min.js', $.rename({ suffix: '.min' })))
+    .pipe($.if('!*.min.js', $.uglify()))
     .pipe(gulp.dest(paths.scripts.dist + '/vendor'))
 );
 
@@ -122,12 +144,12 @@ gulp.task('scripts:vendor', () =>
 
 // Copy external CSS dependencies
 gulp.task('styles:copy', () =>
-  gulp.src(['./bower_components/normalize.css/normalize.css'])
-    .pipe($.rename({
+  gulp.src(mainBowerFiles('**/*.+(css|scss)'))
+    .pipe($.if('*.css', $.rename({
       prefix: '_',
       extname: '.scss'
-    }))
-    .pipe(gulp.dest(paths.styles.src + '/vendor'))
+    })))
+    .pipe(gulp.dest(paths.styles.src + '/vendors'))
 );
 
 // Compile SASS, prefix stylesheets, minfy and generate sourcemaps
@@ -165,7 +187,7 @@ gulp.task('styles', () => {
  */
 
 gulp.task('media', () =>
-  gulp.src([paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)'])
+  gulp.src(customMainBowerFiles(['**/*.+(png|jpg|jpeg|gif|svg)'], [paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)']))
     .pipe($.if('/**/*.+(png|jpg|jpeg|gif|svg)', $.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -182,7 +204,7 @@ gulp.task('media', () =>
  */
 
 gulp.task('fonts', () =>
-  gulp.src([paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg|css)'])
+  gulp.src(customMainBowerFiles(['**/*.+(ttf|otf|woff|woff2|eot|svg)'], [paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg)']))
     .pipe(gulp.dest(paths.fonts.dist))
 );
 
@@ -198,7 +220,7 @@ gulp.task('favicons', cb => {
       src: paths.sources + '/favicon.jpg',
       dest: paths.favicons,
       html: paths.dist + '/meta.html',
-      iconsPath: 'assets/media/favicons/'
+      iconsPath: paths.favicons.replace(paths.dist + '/', '')
     },
     icons: {
       coast: false,
@@ -218,16 +240,6 @@ gulp.task('favicons', cb => {
   });
 });
 
-// Vars used in 'favicons:copy' and 'favicons:trash' tasks
-var rootFavicons = [
-  'manifest.json',
-  'favicon.ico',
-  'browserconfig.xml',
-  'manifest.webapp',
-  'yandex-browser-manifest.json',
-  'apple-touch-icon.png'
-].map(n => paths.favicons + n);
-
 // Copy to the root folder app
 gulp.task('favicons:copy', () =>
   gulp.src(rootFavicons)
@@ -236,7 +248,7 @@ gulp.task('favicons:copy', () =>
 
 // Delete unnecessary and repeated files
 gulp.task('favicons:trash', cb => {
-  var copyArray = rootFavicons;
+  const copyArray = rootFavicons;
   copyArray.push(
     paths.favicons + 'apple-touch-icon*.png',
     paths.favicons + 'favicon-*.png',
@@ -256,7 +268,12 @@ gulp.task('serve', () => {
     startPath: pkg.name + paths.dist.slice(1),
     logPrefix: pkg.name
   });
-  gulp.watch([paths.dist + '/**/*'], bs.reload);
+  gulp.watch([
+    paths.scripts.dist + '/*.js',
+    paths.media.dist + '/**/*',
+    paths.fonts.dist + '/**/*',
+    paths.dist + '/**/*.+(php|py|rb|html)'
+  ], bs.reload);
 });
 
 
@@ -265,12 +282,19 @@ gulp.task('serve', () => {
  */
 
 gulp.task('watch', () => {
-  gulp.watch(paths.scripts.src + '/**/*.js', ['scripts']);
+  gulp.watch([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/plugins.js`], ['scripts']);
   gulp.watch(paths.scripts.src + '/plugins.js', ['scripts:plugins']);
   gulp.watch(paths.styles.src + '/**/*.+(css|scss|sass)', ['styles']);
   gulp.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', ['media']);
   gulp.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg|css)', ['fonts']);
   gulp.watch(paths.sources + '/favicon.+(jpg|png)', ['favicons']);
+  gulp.watch('./bower_components/**/*', [
+    'scripts:plugins',
+    'scripts:vendor',
+    'styles:copy',
+    'media',
+    'fonts'
+  ]);
 });
 
 
@@ -303,23 +327,23 @@ gulp.task('default', cb => {
  * Test tasks
  */
 
-// Create public tunnel to localhost without deploying
-var site = '';
-gulp.task('ngrok-url', (cb) => {
-  ngrok.connect(80, (err, url) => { // Change 80 to the port of your Apache or nginx
+// Create public tunnel to localhost, demo without deploying
+gulp.task('tunnel-url', (cb) => {
+  ngrok.connect(80, (err, url) => { // Change 80 to the port of your web server
     if (err) {
-      throw err;
+      $.util.log($.util.colors.red('gulp ngrok error: ' + err));
+      return cb(err);
     }
-    site = url + '/' + pkg.name + paths.dist.slice(1);
-    console.log('Serving your tunnel from: ' + site);
+    tunnelUrl = url + '/' + pkg.name + paths.dist.slice(1);
+    $.util.log($.util.colors.blue('Serving your tunnel from: ' + tunnelUrl));
     cb();
   });
 });
 
 // PageSpeed Insights test for mobile
 gulp.task('pagespeed-mobile', cb => {
-  pagespeed(site, {
-    strategy: 'mobile',
+  pagespeed(tunnelUrl, {
+    strategy: 'mobile'
     // Use a Google Developer API key if you have one: http://goo.gl/RkN0vE
     // key: 'YOUR_API_KEY'
   }, cb);
@@ -327,8 +351,8 @@ gulp.task('pagespeed-mobile', cb => {
 
 // PageSpeed Insights test for desktop
 gulp.task('pagespeed-desktop', cb => {
-  pagespeed(site, {
-    strategy: 'desktop',
+  pagespeed(tunnelUrl, {
+    strategy: 'desktop'
     // Use a Google Developer API key if you have one: http://goo.gl/RkN0vE
     // key: 'YOUR_API_KEY'
   }, cb);
@@ -336,26 +360,28 @@ gulp.task('pagespeed-desktop', cb => {
 
 // Performance test
 gulp.task('test:performance', cb => {
-  runSequence('ngrok-url', 'pagespeed-mobile', 'pagespeed-desktop', cb);
+  runSequence('tunnel-url', 'pagespeed-mobile', 'pagespeed-desktop', cb);
 });
 
 // Accessibility test
 gulp.task('test:accessibility', cb => {
   function displaySeverity(report) {
+    let _return;
     if (report.severity === 'Severe') {
-      return $.util.colors.red('[' + report.severity + '] ');
+      _return = $.util.colors.red('[' + report.severity + '] ');
     } else if (report.severity === 'Warning') {
-      return $.util.colors.yellow('[' + report.severity + '] ');
+      _return = $.util.colors.yellow('[' + report.severity + '] ');
     } else {
-      return '[' + report.severity + '] ';
+      _return = '[' + report.severity + '] ';
     }
+    return _return;
   }
-  a11y('localhost/' + pkg.name + paths.dist.slice(1), function (err, reports) {
+  a11y('localhost/' + pkg.name + paths.dist.slice(1), (err, reports) => {
     if (err) {
       $.util.log($.util.colors.red('gulp a11y error: ' + err));
-      return;
+      return cb(err);
     }
-    reports.audit.forEach(function (report) {
+    reports.audit.forEach((report) => {
       if (report.result === 'FAIL') {
         $.util.log(displaySeverity(report), $.util.colors.red(report.heading), report.elements);
       }

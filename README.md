@@ -1,20 +1,18 @@
 # Solid Webapp
 
-Basic and solid Development and Production enviroment and file structured for web projects based on LEMP/LAMP stack.
+Basic and solid boilerplate front-end for web apps.
 
 ## Quick start
-1. LEMP/LAMP stack runnig.
-2. Node.js and Git.
-3. bower, gulp.js, JSCS and JSHint globally installed.
-4. Clone the repo.
-5. Run in node prompt `npm install --save-dev` and `bower install -S`.
-6. Run `gulp` see the magic and start develop.
+1. Node.js and Git.
+2. bower, gulp.js and eslint globally installed.
+3. Clone the repo.
+4. Run in node prompt `npm install --save-dev` and `bower install -S`.
+5. Run `gulp` see the magic and start develop.
 
 ## Features
 
 ### CSS
 * SASS and follow [Sass Guidelines](http://sass-guidelin.es/) structure
-* BEM ready
 * CSS Autoprefixing
 * Minify CSS with [clean-css](https://github.com/jakubpawlowicz/clean-css)
 * Safely load external fonts to avoid FOIT
@@ -22,7 +20,7 @@ Basic and solid Development and Production enviroment and file structured for we
 
 ### JavaScript
 * ES6 ready with babelfy
-* Source JS lint with JSCS and JSHint
+* Source JS lint with eslint
 * Minify with Uglify
 * Sourcemaps
 
@@ -35,19 +33,21 @@ Basic and solid Development and Production enviroment and file structured for we
 
 ### Other
 * BrowserSync for synchronising URLs, interactions and code changes across multiple devices while develop
+* Bower integration
 * The gulpfile makes use of ES6 features by using Babel
-* A custom Modernizr build for feature detection and a polyfill for CSS Media Queries.
-* Automate Favicons generator for Home page icon for Android, iOS, Nokia, Firefox, Windows, Yandex Browser
+* A custom Modernizr build for feature detection
+* Automate Favicons generator for Home page icon and web app meta files for Android, iOS, Firefox, Windows 8.1, and Yandex Browser
 * An optimized Google Analytics snippet
 
 ## Support
-* IE9+, IE Mobile 10+
+* IE9+
 * Firefox latest
 * Chrome latest
 * Safari latest
 * Opera latest
 * BlackBerry 10+
 * Android/Chrome 2.3+
+* IE Mobile 10+
 
 ## Inspiration
 * [HTML5 boilerplate](https://github.com/h5bp/html5-boilerplate)

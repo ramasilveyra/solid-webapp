@@ -1,0 +1,8 @@
+$breakpoints: (
+  'mini': (320 / 16) * 1px, // 20em (320px)
+  'small': (480 / 16) * 1px, // 30em (480px)
+  'medium': (768 / 16) * 1px, // 48em (768px)
+  'large': (1024 / 16) * 1px, // 64em (1024px)
+  'xlarge': (1280 / 16) * 1px, // 80em (1280px)
+  'xxlarge': (1440 / 16) * 1px // 90em (1440px)
+);

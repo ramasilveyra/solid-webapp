@@ -4,7 +4,7 @@
   "authors": [
     "Ramiro Silveyra d'Avila"
   ],
-  "description": "Basic and solid boilerplate and file structured for web projects based on LEMP/LAMP stack.",
+  "description": "Basic and solid boilerplate front-end for web apps",
   "main": "dist/*",
   "keywords": [
     "web",
@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-    "normalize.css": "~3.0.2"
+    "normalize.css": "~3.0.2",
+    "include-media": "~1.3.1"
   }
 }
