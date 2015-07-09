@@ -178,7 +178,7 @@ gulp.task('styles', () => {
     .pipe($.if('*.css', $.minifyCss()))
     .pipe($.sourcemaps.write('../maps'))
     .pipe(gulp.dest(paths.styles.dist))
-    .pipe($.if(bs.active, bs.stream()));
+    .pipe($.if(bs.active, bs.stream({ match: '**/*.css' })));
 });
 
 
@@ -268,11 +268,10 @@ gulp.task('serve', () => {
     startPath: pkg.name + paths.dist.slice(1),
     logPrefix: pkg.name
   });
-  gulp.watch([
-    paths.scripts.dist + '/*.js',
+  $.watch([
     paths.media.dist + '/**/*',
     paths.fonts.dist + '/**/*',
-    paths.dist + '/**/*.+(php|py|rb|html)'
+    paths.dist + '/**/*.+(php|py|rb|js|html)'
   ], bs.reload);
 });
 
@@ -282,19 +281,22 @@ gulp.task('serve', () => {
  */
 
 gulp.task('watch', () => {
-  gulp.watch([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/plugins.js`], ['scripts']);
-  gulp.watch(paths.scripts.src + '/plugins.js', ['scripts:plugins']);
-  gulp.watch(paths.styles.src + '/**/*.+(css|scss|sass)', ['styles']);
-  gulp.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', ['media']);
-  gulp.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg|css)', ['fonts']);
-  gulp.watch(paths.sources + '/favicon.+(jpg|png)', ['favicons']);
-  gulp.watch('./bower_components/**/*', [
+  $.watch([
+    paths.scripts.src + '/**/*.js',
+    `!${paths.scripts.src}/plugins.js`
+  ], () => runSequence(['scripts']));
+  $.watch(paths.scripts.src + '/plugins.js', () => runSequence(['scripts:plugins']));
+  $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
+  $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
+  $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () => runSequence(['fonts']));
+  $.watch(paths.sources + '/favicon.+(jpg|png)', () => runSequence(['favicons']));
+  $.watch('./bower_components/**/*', () => runSequence([
     'scripts:plugins',
     'scripts:vendor',
     'styles:copy',
     'media',
     'fonts'
-  ]);
+  ]));
 });
 
 

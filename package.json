@@ -49,6 +49,7 @@
     "gulp-sourcemaps": "^1.5.2",
     "gulp-uglify": "^1.2.0",
     "gulp-util": "^3.0.6",
+    "gulp-watch": "^4.2.4",
     "main-bower-files": "^2.8.2",
     "ngrok": "^0.1.99",
     "psi": "^1.0.6",

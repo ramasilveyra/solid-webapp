@@ -1,2 +1,2 @@
-dist/
+dist/assets/scripts/*.min.js
 src/assets/scripts/plugins.js
