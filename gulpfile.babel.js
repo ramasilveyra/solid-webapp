@@ -19,7 +19,7 @@ import pkg from './package.json';
 const $ = gulpLoadPlugins();
 const bs = browserSync.create(pkg.name);
 // Paths for all common dirs, change to fit your needs
-const paths = {
+export const paths = {
   src: './src',
   dist: './dist'
 };

@@ -30,6 +30,7 @@ Basic and solid boilerplate front-end for web apps.
 ### Tests
 * Performance audit with PageSpeed Insights
 * Accessibility audit with a11y
+* Tests with mocha for Continuos Integration
 
 ### Other
 * BrowserSync for synchronising URLs, interactions and code changes across multiple devices while develop

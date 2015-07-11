@@ -10,4 +10,4 @@ Locality: Paraná, Entre Ríos, Argentina
 
 Standards: HTML5, CSS3, JavaScript
 Components: Normalize.css, jQuery, Modernizr, Google Analytics
-Software: Node.js, Gulp.js, SASS, Babel, Bower, Browserify, Git, ST3, Solid WebApp
+Software: Node.js, Gulp.js, SASS, Mocha, Babel, Bower, Browserify, Git, ST3, Solid WebApp

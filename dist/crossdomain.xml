@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE cross-domain-policy SYSTEM "http://www.adobe.com/xml/dtds/cross-domain-policy.dtd">
 <cross-domain-policy>
-    <!-- Leer esto: www.adobe.com/devnet/articles/crossdomain_policy_file_spec.html -->
+    <!-- Read this: https://www.adobe.com/devnet/articles/crossdomain_policy_file_spec.html -->
 
-    <!-- Politica más restrictiva: -->
+    <!-- Most restrictive policy: -->
     <site-control permitted-cross-domain-policies="none"/>
 
-    <!-- Politica menos restrictiva: -->
+    <!-- Least restrictive policy: -->
     <!--
     <site-control permitted-cross-domain-policies="all"/>
     <allow-access-from domain="*" to-ports="*" secure="false"/>
