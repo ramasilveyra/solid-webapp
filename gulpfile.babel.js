@@ -312,7 +312,7 @@ gulp.task('build', cb => {
     'fonts',
     'media',
     'favicons'
-  ], 'scripts:plugins', cb);
+  ], cb);
 });
 
 

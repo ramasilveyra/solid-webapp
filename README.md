@@ -1,5 +1,8 @@
 # Solid Webapp
 
+[![Build Status](https://travis-ci.org/ramasilveyra/solid-webapp.svg?branch=master)](https://travis-ci.org/ramasilveyra/solid-webapp)
+[![devDependency Status](https://david-dm.org/ramasilveyra/solid-webapp/dev-status.svg)](https://david-dm.org/ramasilveyra/solid-webapp#info=devDependencies)
+
 Basic and solid boilerplate front-end for web apps.
 
 ## Quick start

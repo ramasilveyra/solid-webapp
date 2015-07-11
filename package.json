@@ -22,7 +22,7 @@
   "scripts": {
     "build": "gulp build",
     "start": "gulp watch serve",
-    "test": "mocha --compilers js:babel/register"
+    "test": "mocha --compilers js:babel/register && gulp scripts:lint"
   },
   "devDependencies": {
     "a11y": "^0.3.1",
