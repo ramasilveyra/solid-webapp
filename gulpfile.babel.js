@@ -1,5 +1,3 @@
-'use strict';
-
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import mainBowerFiles from 'main-bower-files';
@@ -94,7 +92,6 @@ gulp.task('scripts:lint', () =>
   gulp.src([paths.scripts.src + '/*.js', `!${paths.scripts.src}/plugins.js`])
     .pipe($.eslint())
     .pipe($.eslint.format())
-    .pipe($.eslint.failOnError())
 );
 
 // Generates plugins.js file
@@ -153,7 +150,7 @@ gulp.task('styles:copy', () =>
 );
 
 // Compile SASS, prefix stylesheets, minfy and generate sourcemaps
-gulp.task('styles', () => {
+gulp.task('styles', ['styles:lint'], () => {
   const AUTOPREFIXER_BROWSERS = [
     'ie >= 9',
     'ie_mob >= 10',
@@ -181,13 +178,25 @@ gulp.task('styles', () => {
     .pipe($.if(bs.active, bs.stream({ match: '**/*.css' })));
 });
 
+// Lint SASS files
+gulp.task('styles:lint', () =>
+  gulp.src([paths.styles.src + '/**/*.scss', `!${paths.styles.src}/vendors/*.scss`])
+    .pipe($.scssLint({
+      'config': '.scss-lint.yml'
+    }))
+);
+
 
 /**
  * Lossless compression for images (svg jpg jpeg gif svg)
  */
 
 gulp.task('media', () =>
-  gulp.src(customMainBowerFiles(['**/*.+(png|jpg|jpeg|gif|svg)'], [paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)']))
+  gulp.src(customMainBowerFiles([
+    '**/*.+(png|jpg|jpeg|gif|svg)'
+  ], [
+    paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)'
+  ]))
     .pipe($.if('/**/*.+(png|jpg|jpeg|gif|svg)', $.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -204,7 +213,11 @@ gulp.task('media', () =>
  */
 
 gulp.task('fonts', () =>
-  gulp.src(customMainBowerFiles(['**/*.+(ttf|otf|woff|woff2|eot|svg)'], [paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg)']))
+  gulp.src(customMainBowerFiles([
+    '**/*.+(ttf|otf|woff|woff2|eot|svg)'
+  ], [
+    paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg)'
+  ]))
     .pipe(gulp.dest(paths.fonts.dist))
 );
 

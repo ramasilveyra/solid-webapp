@@ -1,9 +1,11 @@
 language: node_js
 node_js:
   - 'iojs'
-before_script:
+before_install:
+  - gem install scss-lint
   - npm install -g bower
   - npm install -g gulp
   - npm install -g babel
+before_script:
   - bower install
   - gulp build

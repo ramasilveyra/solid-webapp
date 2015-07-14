@@ -2,36 +2,36 @@
   $src: null;
 
   $extmods: (
-    eot: "?#iefix",
-    svg: "#" + str-replace($name, " ", "_")
+    eot: '?#iefix',
+    svg: '#' + str-replace($name, ' ', '_')
   );
 
   $formats: (
-    otf: "opentype",
-    eot: "embedded-opentype",
-    ttf: "truetype"
+    otf: 'opentype',
+    eot: 'embedded-opentype',
+    ttf: 'truetype'
   );
 
-  $weightNames: (
-    normal: "Regular",
-    bold: "Bold",
-    100: "Thin",
-    200: "Extra Light",
-    300: "Light",
-    400: "Regular",
-    500: "Medium",
-    600: "Semi Bold",
-    700: "Bold",
-    800: "Extra Bold",
-    900: "Ultra Bold"
+  $weight-names: (
+    normal: 'Regular',
+    bold: 'Bold',
+    100: 'Thin',
+    200: 'Extra Light',
+    300: 'Light',
+    400: 'Regular',
+    500: 'Medium',
+    600: 'Semi Bold',
+    700: 'Bold',
+    800: 'Extra Bold',
+    900: 'Ultra Bold'
   );
 
-  $src: append($src, local(quote($name + " " + map-get($weightNames, $weight))));
+  $src: append($src, local(quote($name + ' ' + map-get($weight-names, $weight))));
 
   @each $ext in $exts {
     $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
     $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
-    $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
+    $src: append($src, url(quote($path + '.' + $extmod)) format(quote($format)), comma);
   }
 
   @font-face {
@@ -43,22 +43,20 @@
 }
 
 
-/*
- *http://www.sitepoint.com/using-sass-quantity-queries/
- */
-@mixin quantity-query( $number, $comparison: 'equal' ) {
+// http://www.sitepoint.com/using-sass-quantity-queries/
+@mixin quantity-query($number, $comparison: 'equal') {
   $nth: '';
-  
-  @if index( ('greater' 'more' '>'), $comparison ) {
+
+  @if index(('greater' 'more' '>'), $comparison) {
     $nth: 'n + #{$number}';
-  } @else if index( ('less' 'fewer' '<'), $comparison ) {
+  } @else if index(('less' 'fewer' '<'), $comparison) {
     $nth: '-n + #{$number}';
-  } @else if index( ('equal' 'same' '='), $comparison ) {
+  } @else if index(('equal' 'same' '='), $comparison) {
     $nth: $number;
   } @else {
     @warn "Sorry, that's an invalid $comparison value."
   }
-  
+
   &:nth-last-child(#{$nth}):first-child {
     &,
     & ~ * {
@@ -67,11 +65,10 @@
   }
 }
 
-/*
- * http://www.paulund.co.uk/rem-sass-mixin-pixel-fallback
- */
+// http://www.paulund.co.uk/rem-sass-mixin-pixel-fallback
 
 @mixin rem($property, $values) {
+  // scss-lint:disable ZeroUnit
   // Create a couple of empty lists as output buffers.
   $font-size: $base-font-size;
   $px-values: ();
@@ -91,7 +88,7 @@
       $new-rem-value: $value / $font-size;
       $px-values: join($px-values, round($value));
       $rem-values: join($rem-values, #{$new-rem-value}rem);
-    } @else if type-of($value) == number and not unitless($value) and (unit($value) == "%") {
+    } @else if type-of($value) == number and not unitless($value) and (unit($value) == '%') {
       // % value given - don't add px or rem
       $px-values: join($px-values, #{$value});
       $rem-values: join($rem-values, #{$value});

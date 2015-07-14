@@ -1,6 +1,4 @@
-/*
- * Container
- */
+// Container
 
 %container {
   margin: auto;
@@ -8,9 +6,7 @@
   width: 94%;
 }
 
-/*
- * Image replacement
- */
+// Image replacement
 
 %ir {
   color: transparent;
@@ -18,15 +14,14 @@
   text-shadow: none;
 }
 
-/*
- * Clean lists and links
- */
+// Clean lists and links
 
 %clean-list {
   list-style: none;
   margin-bottom: 0;
   margin-top: 0;
   padding: 0;
+
   a {
     @extend %clean-link;
   }
@@ -37,16 +32,15 @@
   text-decoration: none;
 }
 
-/*
- * Clearfix: floats container
- */
+// Clearfix: floats container
 
 %clearfix {
   &::before,
   &::after {
-    content: " ";
+    content: ' ';
     display: table;
   }
+
   &::after {
     clear: both;
   }

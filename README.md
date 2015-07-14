@@ -16,6 +16,7 @@ Basic and solid boilerplate front-end for web apps.
 
 ### CSS
 * SASS and follow [Sass Guidelines](http://sass-guidelin.es/) structure
+* SASS lint with scss-lint (BEM ready)
 * CSS Autoprefixing
 * Minify CSS with [clean-css](https://github.com/jakubpawlowicz/clean-css)
 * Safely load external fonts to avoid FOIT
@@ -59,5 +60,8 @@ Basic and solid boilerplate front-end for web apps.
 * [Web Starter Kit](https://github.com/google/web-starter-kit)
 * [gulp-starter](https://github.com/greypants/gulp-starter)
 
+## Documentation
+Take a look at the [documentation page](docs/README.md).
+
 ## License
-The code is available under the [MIT license](https://github.com/ramasilveyra/solid-webapp/blob/master/LICENSE.md).
+The code is available under the [MIT license](LICENSE.md).
