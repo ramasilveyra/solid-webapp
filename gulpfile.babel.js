@@ -9,7 +9,6 @@ import browserify from 'browserify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
-import ngrok from 'ngrok';
 import a11y from 'a11y';
 import {output as pagespeed} from 'psi';
 import pkg from './package.json';
@@ -280,6 +279,8 @@ gulp.task('serve', () => {
     proxy: 'localhost/',
     startPath: pkg.name + paths.dist.slice(1),
     logPrefix: pkg.name
+  }, (err, bs) => {
+    tunnelUrl = bs.tunnel.url + pkg.name + paths.dist.slice(1);
   });
   $.watch([
     paths.media.dist + '/**/*',
@@ -342,19 +343,6 @@ gulp.task('default', cb => {
  * Test tasks
  */
 
-// Create public tunnel to localhost, demo without deploying
-gulp.task('tunnel-url', (cb) => {
-  ngrok.connect(80, (err, url) => { // Change 80 to the port of your web server
-    if (err) {
-      $.util.log($.util.colors.red('gulp ngrok error: ' + err));
-      return cb(err);
-    }
-    tunnelUrl = url + '/' + pkg.name + paths.dist.slice(1);
-    $.util.log($.util.colors.blue('Serving your tunnel from: ' + tunnelUrl));
-    cb();
-  });
-});
-
 // PageSpeed Insights test for mobile
 gulp.task('pagespeed-mobile', cb => {
   pagespeed(tunnelUrl, {
@@ -375,7 +363,7 @@ gulp.task('pagespeed-desktop', cb => {
 
 // Performance test
 gulp.task('test:performance', cb => {
-  runSequence('tunnel-url', 'pagespeed-mobile', 'pagespeed-desktop', cb);
+  runSequence('serve', 'pagespeed-mobile', 'pagespeed-desktop', cb);
 });
 
 // Accessibility test
