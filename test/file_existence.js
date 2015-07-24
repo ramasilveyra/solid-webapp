@@ -1,6 +1,6 @@
 /*eslint-env mocha */
 
-import {paths} from '../gulpfile.babel.js';
+import {paths} from '../config.js';
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';

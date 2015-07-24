@@ -11,37 +11,11 @@ import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import a11y from 'a11y';
 import {output as pagespeed} from 'psi';
+import {paths} from './config.js';
 import pkg from './package.json';
 
 const $ = gulpLoadPlugins();
 const bs = browserSync.create(pkg.name);
-// Paths for all common dirs, change to fit your needs
-export const paths = {
-  src: './src',
-  dist: './dist'
-};
-paths.assets = {
-  src: paths.src + '/assets',
-  dist: paths.dist + '/assets'
-};
-paths.scripts = {
-  src: paths.assets.src + '/scripts',
-  dist: paths.assets.dist + '/scripts'
-};
-paths.styles = {
-  src: paths.assets.src + '/styles',
-  dist: paths.assets.dist + '/styles'
-};
-paths.media = {
-  src: paths.assets.src + '/media',
-  dist: paths.assets.dist + '/media'
-};
-paths.fonts = {
-  src: paths.assets.src + '/fonts',
-  dist: paths.assets.dist + '/fonts'
-};
-paths.sources = paths.assets.src + '/sources';
-paths.favicons = paths.media.dist + '/favicons/';
 const rootFavicons = [
   'manifest.json',
   'favicon.ico',
@@ -88,7 +62,7 @@ gulp.task('scripts', ['scripts:lint'], () =>
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
-  gulp.src([paths.scripts.src + '/*.js', `!${paths.scripts.src}/plugins.js`])
+  gulp.src([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/plugins.js`])
     .pipe($.eslint())
     .pipe($.eslint.format())
 );

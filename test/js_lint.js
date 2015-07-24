@@ -1,4 +1,4 @@
-import {paths} from '../gulpfile.babel.js';
+import {paths} from '../config.js';
 import lint from 'mocha-eslint';
 
 // Array of paths to lint
