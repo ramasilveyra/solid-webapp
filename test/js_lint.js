@@ -17,4 +17,7 @@ const options = {
 };
 
 // Run the tests
-lint(globs, options);
+
+// Awaiting mocha-eslint support multiple globs
+// See: https://github.com/BadgeLabs/mocha-eslint/tree/multi-glob
+// lint(globs, options);
