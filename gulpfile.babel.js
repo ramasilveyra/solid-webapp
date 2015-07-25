@@ -13,6 +13,7 @@ import a11y from 'a11y';
 import {output as pagespeed} from 'psi';
 import {paths} from './config.js';
 import pkg from './package.json';
+import fs from 'fs';
 
 const $ = gulpLoadPlugins();
 const bs = browserSync.create(pkg.name);
@@ -252,7 +253,8 @@ gulp.task('serve', () => {
   bs.init({
     proxy: 'localhost/',
     startPath: pkg.name + paths.dist.slice(1),
-    logPrefix: pkg.name
+    logPrefix: pkg.name,
+    tunnel: true
   }, (err, bs) => {
     tunnelUrl = bs.tunnel.url + pkg.name + paths.dist.slice(1);
   });
