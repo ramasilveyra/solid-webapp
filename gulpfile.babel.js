@@ -2,6 +2,7 @@ import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import mainBowerFiles from 'main-bower-files';
 import del from 'del';
+import glob from 'glob';
 import runSequence from 'run-sequence';
 import favicons from 'favicons';
 import browserSync from 'browser-sync';
@@ -43,9 +44,10 @@ function customMainBowerFiles(filterGlobs, customFiles = []) {
  */
 
 // browserify with babelify the JS code
-gulp.task('scripts', ['scripts:lint'], () =>
-  browserify({
-    entries: paths.scripts.src + '/main.js',
+gulp.task('scripts', ['scripts:lint'], () => {
+  const files = glob.sync(paths.scripts.src + '/*.js');
+  return browserify({
+    entries: files,
     debug: true
   })
     .transform(babelify)
@@ -59,53 +61,19 @@ gulp.task('scripts', ['scripts:lint'], () =>
   }))
   .pipe($.sourcemaps.write('../maps'))
   .pipe(gulp.dest(paths.scripts.dist))
-);
+});
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
-  gulp.src([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/plugins.js`])
+  gulp.src([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/vendors/*.js`])
     .pipe($.eslint())
     .pipe($.eslint.format())
 );
 
-// Generates plugins.js file
-gulp.task('scripts:plugins', ['scripts:fonts', 'scripts:vendor'], () =>
-  gulp.src(customMainBowerFiles([
-    '**/*.js',
-    '!**/jquery.js'
-  ], [
-    paths.scripts.src + '/plugins.js',
-    paths.scripts.dist + '/vendor/typography.min.js'
-  ]))
-    .pipe($.if('!*.min.js', $.uglify()))
-    .pipe($.concat('plugins.min.js'))
-    .pipe(gulp.dest(paths.scripts.dist))
-);
-
-// Generate JS code to safelly load fonts to avoid FOIT
-// Read: https://www.filamentgroup.com/lab/font-events.html
-gulp.task('scripts:fonts', () =>
-  gulp.src(paths.styles.dist + '/main.min.css')
-    .pipe($.avoidfoit())
-    .pipe($.rename({
-      basename: 'typography',
-      suffix: '.min',
-      extname: '.js'
-    }))
-    .pipe($.uglify())
-    .pipe(gulp.dest(paths.scripts.dist + '/vendor'))
-);
-
-// Copy external JS code
-gulp.task('scripts:vendor', () =>
-  gulp.src(customMainBowerFiles([
-    '**/jquery.js'
-  ], [
-    paths.scripts.dist + '/vendor/modernizr.min.js'
-  ]))
-    .pipe($.if('!*.min.js', $.rename({ suffix: '.min' })))
-    .pipe($.if('!*.min.js', $.uglify()))
-    .pipe(gulp.dest(paths.scripts.dist + '/vendor'))
+// Copy external JS libs
+gulp.task('scripts:vendors', () =>
+  gulp.src(mainBowerFiles(['**/*.js']))
+    .pipe(gulp.dest(paths.scripts.src + '/vendors'))
 );
 
 
@@ -273,16 +241,14 @@ gulp.task('serve', () => {
 gulp.task('watch', () => {
   $.watch([
     paths.scripts.src + '/**/*.js',
-    `!${paths.scripts.src}/plugins.js`
+    `!${paths.scripts.src}/vendors/*.js`
   ], () => runSequence(['scripts']));
-  $.watch(paths.scripts.src + '/plugins.js', () => runSequence(['scripts:plugins']));
   $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
   $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
   $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () => runSequence(['fonts']));
   $.watch(paths.sources + '/favicon.+(jpg|png)', () => runSequence(['favicons']));
   $.watch('./bower_components/**/*', () => runSequence([
-    'scripts:plugins',
-    'scripts:vendor',
+    'scripts:vendors',
     'styles:copy',
     'media',
     'fonts'
@@ -298,7 +264,7 @@ gulp.task('build', cb => {
   runSequence('styles:copy', [
     'styles',
     'scripts',
-    'scripts:plugins',
+    'scripts:vendors',
     'fonts',
     'media',
     'favicons'
