@@ -2,19 +2,20 @@ import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import mainBowerFiles from 'main-bower-files';
 import del from 'del';
-import glob from 'glob';
+import fs from 'fs';
 import runSequence from 'run-sequence';
 import favicons from 'favicons';
+import a11y from 'a11y';
 import browserSync from 'browser-sync';
 import browserify from 'browserify';
+import watchify from 'watchify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
-import a11y from 'a11y';
+import {assign} from 'lodash';
 import {output as pagespeed} from 'psi';
 import {paths} from './config.js';
 import pkg from './package.json';
-import fs from 'fs';
 
 const $ = gulpLoadPlugins();
 const bs = browserSync.create(pkg.name);
@@ -43,25 +44,33 @@ function customMainBowerFiles(filterGlobs, customFiles = []) {
  * Tasks for JS
  */
 
-// browserify with babelify the JS code
-gulp.task('scripts', ['scripts:lint'], () => {
-  const files = glob.sync(paths.scripts.src + '/*.js');
-  return browserify({
-    entries: files,
-    debug: true
-  })
-    .transform(babelify)
-    .bundle()
-  .pipe(source('main.js'))
-  .pipe(buffer())
-  .pipe($.sourcemaps.init({ loadMaps: true }))
-  .pipe($.uglify())
-  .pipe($.rename({
-    suffix: '.min'
-  }))
-  .pipe($.sourcemaps.write('../maps'))
-  .pipe(gulp.dest(paths.scripts.dist))
+// browserify with babelify the JS code, and watchify
+
+const opts = assign({}, watchify.args, {
+  entries: paths.scripts.src + '/main.js',
+  debug: true
 });
+
+const b = watchify(browserify(opts));
+b.transform(babelify.configure({
+  compact: false
+}));
+
+gulp.task('scripts', ['scripts:lint'], bundle);
+b.on('update', bundle);
+b.on('log', $.util.log);
+
+function bundle() {
+  return b.bundle()
+    // log errors if they happen
+    .on('error', $.util.log.bind($.util, 'Browserify Error'))
+    .pipe(source('main.min.js'))
+    .pipe(buffer())
+    .pipe($.sourcemaps.init({ loadMaps: true }))
+    .pipe($.uglify())
+    .pipe($.sourcemaps.write('../maps'))
+    .pipe(gulp.dest(paths.scripts.dist));
+}
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
@@ -214,23 +223,37 @@ gulp.task('favicons:trash', cb => {
 
 
 /**
- * Start browserSync and start watch changes on dist folder for auto reload
+ * Browsersync
  */
 
+// Start Browsersync and start watch changes on dist folder for auto reload
 gulp.task('serve', () => {
   bs.init({
     proxy: 'localhost/',
     startPath: pkg.name + paths.dist.slice(1),
     logPrefix: pkg.name,
-    tunnel: true
-  }, (err, bs) => {
-    tunnelUrl = bs.tunnel.url + pkg.name + paths.dist.slice(1);
+    online: false
   });
   $.watch([
     paths.media.dist + '/**/*',
     paths.fonts.dist + '/**/*',
     paths.dist + '/**/*.+(php|py|rb|js|html)'
   ], bs.reload);
+});
+
+// Generate secure tunnnel to your localhost
+gulp.task('serve:tunnel', () => {
+  const bsTunnel = browserSync.create(pkg.name + '-tunnel');
+  bsTunnel.init({
+    proxy: 'localhost/',
+    startPath: pkg.name + paths.dist.slice(1),
+    logPrefix: pkg.name + '-tunnel',
+    tunnel: true,
+    online: true,
+    open: 'tunnel'
+  }, (err, bs) => {
+    tunnelUrl = bs.tunnel.url + pkg.name + paths.dist.slice(1);
+  });
 });
 
 
@@ -305,7 +328,7 @@ gulp.task('pagespeed-desktop', cb => {
 
 // Performance test
 gulp.task('test:performance', cb => {
-  runSequence('serve', 'pagespeed-mobile', 'pagespeed-desktop', cb);
+  runSequence('serve:tunnel', 'pagespeed-mobile', 'pagespeed-desktop', cb);
 });
 
 // Accessibility test
