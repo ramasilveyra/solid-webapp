@@ -148,13 +148,14 @@ gulp.task('media', () =>
   ], [
     paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)'
   ]))
-    .pipe($.if('/**/*.+(png|jpg|jpeg|gif|svg)', $.cache($.imagemin({
+    .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,
+      optimizationLevel: 7,
       // don't remove IDs from SVGs, they are often used
       // as hooks for embedding and styling
       svgoPlugins: [{cleanupIDs: false}]
-    }))))
+    })))
     .pipe(gulp.dest(paths.media.dist))
 );
 
