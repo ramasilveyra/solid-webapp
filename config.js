@@ -25,3 +25,18 @@ paths.fonts = {
 };
 paths.sources = paths.assets.src + '/sources';
 paths.favicons = paths.media.dist + '/favicons/';
+
+// Bundles for browserify
+export const bundles = [
+  /*{
+    entries: [paths.src + '/app/components/menu.jsx'],
+    output: 'menu.js',
+    extensions: ['.jsx'],
+    destination: paths.dist + '/app/components/'
+  },*/ {
+    entries: [paths.scripts.src + '/main.js'],
+    output: 'main.min.js',
+    extensions: ['.js', '.json'],
+    destination: paths.scripts.dist
+  }
+];

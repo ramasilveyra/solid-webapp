@@ -14,7 +14,7 @@ import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
 import {assign} from 'lodash';
 import {output as pagespeed} from 'psi';
-import {paths} from './config.js';
+import {paths, bundles} from './config.js';
 import pkg from './package.json';
 
 const $ = gulpLoadPlugins();
@@ -46,35 +46,50 @@ function customMainBowerFiles(filterGlobs, customFiles = []) {
 
 // browserify with babelify the JS code, and watchify
 
-const opts = assign({}, watchify.args, {
-  entries: paths.scripts.src + '/main.js',
-  debug: true
-});
+const createBundle = options => {
+  const opts = assign({}, watchify.args, {
+    entries: options.entries,
+    extensions: options.extensions,
+    debug: true
+  });
 
-const b = watchify(browserify(opts));
-b.transform(babelify.configure({
-  compact: false
-}));
+  const b = watchify(browserify(opts));
+  b.transform(babelify.configure({
+    compact: false
+  }));
 
-gulp.task('scripts', ['scripts:lint'], bundle);
-b.on('update', bundle);
-b.on('log', $.util.log);
-
-function bundle() {
-  return b.bundle()
+  const rebundle = () =>
+    b.bundle()
     // log errors if they happen
     .on('error', $.util.log.bind($.util, 'Browserify Error'))
-    .pipe(source('main.min.js'))
+    .pipe(source(options.output))
     .pipe(buffer())
     .pipe($.sourcemaps.init({ loadMaps: true }))
     .pipe($.uglify())
     .pipe($.sourcemaps.write('../maps'))
-    .pipe(gulp.dest(paths.scripts.dist));
-}
+    .pipe(gulp.dest(options.destination));
+
+  b.on('update', rebundle);
+  b.on('log', $.util.log);
+
+  return rebundle();
+};
+
+gulp.task('scripts', ['scripts:lint'], () =>
+  bundles.forEach( bundle =>
+    createBundle({
+      entries: bundle.entries,
+      output: bundle.output,
+      extensions: bundle.extensions,
+      destination: bundle.destination
+    })
+  )
+);
+
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
-  gulp.src([paths.scripts.src + '/**/*.js', `!${paths.scripts.src}/vendors/*.js`])
+  gulp.src([paths.src + '/**/*.+(jsx|js)', `!${paths.scripts.src}/vendors/*.js`])
     .pipe($.eslint())
     .pipe($.eslint.format())
 );
@@ -263,10 +278,7 @@ gulp.task('serve:tunnel', () => {
  */
 
 gulp.task('watch', () => {
-  $.watch([
-    paths.scripts.src + '/**/*.js',
-    `!${paths.scripts.src}/vendors/*.js`
-  ], () => runSequence(['scripts']));
+  runSequence(['scripts']);
   $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
   $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
   $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () => runSequence(['fonts']));
