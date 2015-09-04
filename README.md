@@ -23,13 +23,15 @@ Basic and solid boilerplate front-end for web apps.
 * Sourcemaps
 
 ### JavaScript
-* ES6 ready with babelfy
+* ES6 ready with babelify
+* Support for multiple bundles
 * Source JS lint with eslint
 * Minify with Uglify
 * Sourcemaps
 
 ### Images
 * Lossless compression of svg png jpg and gif
+* Image sprite generator
 
 ### Tests
 * Performance audit with PageSpeed Insights

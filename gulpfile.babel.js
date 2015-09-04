@@ -5,6 +5,7 @@ import del from 'del';
 import fs from 'fs';
 import runSequence from 'run-sequence';
 import favicons from 'favicons';
+import sprity from 'sprity';
 import a11y from 'a11y';
 import browserSync from 'browser-sync';
 import browserify from 'browserify';
@@ -154,14 +155,15 @@ gulp.task('styles:lint', () =>
 
 
 /**
- * Lossless compression for images (svg jpg jpeg gif svg)
+ * Sprites and Lossless compression for images (svg jpg jpeg gif svg)
  */
 
 gulp.task('media', () =>
   gulp.src(customMainBowerFiles([
     '**/*.+(png|jpg|jpeg|gif|svg)'
   ], [
-    paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)'
+    paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)',
+    `!${paths.media.src}/sprite-images/**/*.{png,jpg}`
   ]))
     .pipe($.cache($.imagemin({
       progressive: true,
@@ -174,6 +176,16 @@ gulp.task('media', () =>
     .pipe(gulp.dest(paths.media.dist))
 );
 
+
+// generate sprite.png and _sprite.scss
+gulp.task('sprite:images', () =>
+  sprity.src({
+    src: paths.media.src + '/sprite-images/**/*.{png,jpg}',
+    style: './sprite.css',
+    processor: 'sass'
+  })
+  .pipe($.if('*.png', gulp.dest(paths.media.dist), gulp.dest(paths.styles.src + '/vendors')))
+);
 
 /**
  * Move fonts to dist
@@ -281,6 +293,7 @@ gulp.task('watch', () => {
   runSequence(['scripts']);
   $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
   $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
+  $.watch(paths.media.src + '/sprite-images/**/*.{png,jpg}', () => runSequence(['sprite:images']));
   $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () => runSequence(['fonts']));
   $.watch(paths.sources + '/favicon.+(jpg|png)', () => runSequence(['favicons']));
   $.watch('./bower_components/**/*', () => runSequence([
