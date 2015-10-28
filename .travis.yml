@@ -1,11 +1,10 @@
 language: node_js
 node_js:
   - "4"
-before_install:
+before_script:
   - gem install scss_lint
   - npm install -g bower
   - npm install -g gulp
   - npm install -g babel
-before_script:
   - bower install
   - gulp build
