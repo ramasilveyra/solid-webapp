@@ -1,8 +1,14 @@
 $breakpoints: (
-  'mini': (320 / 16) * 1em, // 20em (320px)
-  'small': (480 / 16) * 1em, // 30em (480px)
-  'medium': (768 / 16) * 1em, // 48em (768px)
-  'large': (1024 / 16) * 1em, // 64em (1024px)
-  'xlarge': (1280 / 16) * 1em, // 80em (1280px)
-  'xxlarge': (1440 / 16) * 1em // 90em (1440px)
+  // 20em (320px)
+  'mini': (320 / 16) * 1em,
+  // 30em (480px)
+  'small': (480 / 16) * 1em,
+  // 48em (768px)
+  'medium': (768 / 16) * 1em,
+  // 64em (1024px)
+  'large': (1024 / 16) * 1em,
+  // 80em (1280px)
+  'xlarge': (1280 / 16) * 1em,
+  // 90em (1440px)
+  'xxlarge': (1440 / 16) * 1em
 );

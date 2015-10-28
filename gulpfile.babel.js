@@ -246,7 +246,7 @@ gulp.task('favicons:trash', cb => {
     paths.favicons + 'favicon-*.png',
     paths.dist + '/meta.html'
   );
-  del(rootFavicons, cb);
+  del(rootFavicons).then(() => cb());
 });
 
 
