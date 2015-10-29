@@ -29,6 +29,7 @@ const rootFavicons = [
   'apple-touch-icon.png'
 ].map(n => paths.favicons + n);
 let tunnelUrl = '';
+let isWatchify = false;
 
 /**
  * Adds files to the output of mainBowerFiles()
@@ -54,7 +55,7 @@ const createBundle = options => {
     debug: true
   });
 
-  const b = watchify(browserify(opts));
+  let b = browserify(opts);
   b.transform(babelify.configure({
     compact: false
   }));
@@ -70,8 +71,11 @@ const createBundle = options => {
     .pipe($.sourcemaps.write('../maps'))
     .pipe(gulp.dest(options.destination));
 
-  b.on('update', rebundle);
-  b.on('log', $.util.log);
+  if (isWatchify) {
+    b = watchify(b);
+    b.on('update', rebundle);
+    b.on('log', $.util.log);
+  }
 
   return rebundle();
 };
@@ -290,6 +294,7 @@ gulp.task('serve:tunnel', () => {
  */
 
 gulp.task('watch', () => {
+  isWatchify = true;
   runSequence(['scripts']);
   $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
   $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
