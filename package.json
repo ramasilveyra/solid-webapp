@@ -59,7 +59,7 @@
     "main-bower-files": "^2.9.0",
     "mocha": "^2.3.3",
     "mocha-eslint": "^1.0.0",
-    "psi": "^1.0.6",
+    "psi": "^2.0.0",
     "run-sequence": "^1.1.4",
     "sprity": "^1.0.7",
     "sprity-sass": "^1.0.4",
