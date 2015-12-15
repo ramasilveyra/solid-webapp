@@ -4,7 +4,6 @@ import mainBowerFiles from 'main-bower-files';
 import del from 'del';
 import fs from 'fs';
 import runSequence from 'run-sequence';
-import favicons from 'favicons';
 import sprity from 'sprity';
 import a11y from 'a11y';
 import browserSync from 'browser-sync';
@@ -209,32 +208,34 @@ gulp.task('fonts', () =>
  * Favicons tasks
  */
 
-// Generates all favicons images and files
 gulp.task('favicons', cb => {
-  favicons({
-    files: {
-      src: paths.sources + '/favicon.jpg',
-      dest: paths.favicons,
-      html: paths.dist + '/meta.html',
-      iconsPath: paths.favicons.replace(paths.dist + '/', '')
-    },
-    icons: {
-      coast: false,
-      appleStartup: false
-    },
-    settings: {
+  runSequence('favicons:generator', 'favicons:copy', 'favicons:trash', cb);
+});
+
+// Generates all favicons images and files
+gulp.task('favicons:generator', () =>
+  gulp.src(paths.sources + '/favicon.jpg')
+    .pipe($.favicons({
       appName: pkg.name,
       appDescription: pkg.description,
-      developer: pkg.author.name,
+      developerName: pkg.author.name,
       developerURL: pkg.author.url,
-      version: pkg.version,
       background: '#ffffff',
-      url: pkg.homepage
-    }
-  }, () => {
-    runSequence('favicons:copy', 'favicons:trash', cb);
-  });
-});
+      path: paths.favicons.replace(paths.dist + '/', ''),
+      url: pkg.homepage,
+      display: 'standalone',
+      orientation: 'portrait',
+      version: pkg.version,
+      logging: false,
+      online: false,
+      icons: {
+        appleStartup: false,
+        coast: false,
+        windows: false
+      }
+    }))
+    .pipe(gulp.dest(paths.favicons))
+);
 
 // Copy to the root folder app
 gulp.task('favicons:copy', () =>
