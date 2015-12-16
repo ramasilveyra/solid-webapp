@@ -6,11 +6,12 @@
 Basic and solid boilerplate front-end for web apps.
 
 ## Quick start
-1. Node.js and Git.
-2. bower, gulp.js and eslint globally installed.
-3. Clone the repo.
-4. Run in node prompt `npm install --save-dev` and `bower install -S`.
-5. Run `gulp` see the magic and start develop.
+1. Node.js, Git and Ruby.
+2. gulp.js and eslint globally installed: `npm install -g gulp eslint`.
+3. Install `scss_lint` gem: `gem install scss_lint`.
+4. Clone the repo: `git clone https://github.com/ramasilveyra/solid-webapp.git`.
+5. Run in node prompt `npm install --save-dev`.
+6. Run `gulp` see the magic and start develop.
 
 ## Features
 
@@ -40,7 +41,6 @@ Basic and solid boilerplate front-end for web apps.
 
 ### Other
 * BrowserSync for synchronising URLs, interactions and code changes across multiple devices while develop
-* Bower integration
 * The gulpfile makes use of ES6 features by using Babel
 * A custom Modernizr build for feature detection
 * Automate Favicons generator for Home page icon and web app meta files for Android, iOS, Firefox, Windows 8.1, and Yandex Browser

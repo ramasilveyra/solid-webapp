@@ -1,6 +1,5 @@
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
-import mainBowerFiles from 'main-bower-files';
 import del from 'del';
 import fs from 'fs';
 import runSequence from 'run-sequence';
@@ -29,17 +28,6 @@ const rootFavicons = [
 ].map(n => paths.favicons + n);
 let tunnelUrl = '';
 let isWatchify = false;
-
-/**
- * Adds files to the output of mainBowerFiles()
- * @param  {array} filterGlobs Globs to filter main bower files
- * @param  {array} customFiles Array of cfiles to add
- * @return {array}             Result array of merge
- */
-function customMainBowerFiles(filterGlobs, customFiles = []) {
-  const a = mainBowerFiles(filterGlobs);
-  return customFiles.concat(a);
-}
 
 /**
  * Tasks for JS
@@ -93,31 +81,18 @@ gulp.task('scripts', ['scripts:lint'], () =>
 
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
-  gulp.src([paths.src + '/**/*.+(jsx|js)', `!${paths.scripts.src}/vendors/*.js`])
+  gulp.src([
+    paths.src + '/**/*.+(jsx|js)',
+    `!${paths.scripts.src}/vendors/*.js`
+  ])
     .pipe($.eslint())
     .pipe($.eslint.format())
-);
-
-// Copy external JS libs
-gulp.task('scripts:vendors', () =>
-  gulp.src(mainBowerFiles(['**/*.js']))
-    .pipe(gulp.dest(paths.scripts.src + '/vendors'))
 );
 
 
 /**
  * Tasks for SASS
  */
-
-// Copy external CSS dependencies
-gulp.task('styles:copy', () =>
-  gulp.src(mainBowerFiles('**/*.+(css|scss)'))
-    .pipe($.if('*.css', $.rename({
-      prefix: '_',
-      extname: '.scss'
-    })))
-    .pipe(gulp.dest(paths.styles.src + '/vendors'))
-);
 
 // Compile SASS, prefix stylesheets, minfy and generate sourcemaps
 gulp.task('styles', ['styles:lint'], () => {
@@ -150,7 +125,10 @@ gulp.task('styles', ['styles:lint'], () => {
 
 // Lint SASS files
 gulp.task('styles:lint', () =>
-  gulp.src([paths.styles.src + '/**/*.scss', `!${paths.styles.src}/vendors/*.scss`])
+  gulp.src([
+    paths.styles.src + '/**/*.scss',
+    `!${paths.styles.src}/vendors/*.scss`
+  ])
     .pipe($.scssLint({
       'config': '.scss-lint.yml'
     }))
@@ -162,12 +140,10 @@ gulp.task('styles:lint', () =>
  */
 
 gulp.task('media', () =>
-  gulp.src(customMainBowerFiles([
-    '**/*.+(png|jpg|jpeg|gif|svg)'
-  ], [
+  gulp.src([
     paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)',
     `!${paths.media.src}/sprite-images/**/*.{png,jpg}`
-  ]))
+  ])
     .pipe($.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -187,7 +163,11 @@ gulp.task('sprite:images', () =>
     style: './sprite.css',
     processor: 'sass'
   })
-  .pipe($.if('*.png', gulp.dest(paths.media.dist), gulp.dest(paths.styles.src + '/vendors')))
+  .pipe($.if(
+    '*.png',
+    gulp.dest(paths.media.dist),
+    gulp.dest(paths.styles.src + '/vendors')
+  ))
 );
 
 /**
@@ -195,11 +175,9 @@ gulp.task('sprite:images', () =>
  */
 
 gulp.task('fonts', () =>
-  gulp.src(customMainBowerFiles([
-    '**/*.+(ttf|otf|woff|woff2|eot|svg)'
-  ], [
+  gulp.src([
     paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg)'
-  ]))
+  ])
     .pipe(gulp.dest(paths.fonts.dist))
 );
 
@@ -297,17 +275,21 @@ gulp.task('serve:tunnel', () => {
 gulp.task('watch', () => {
   isWatchify = true;
   runSequence(['scripts']);
-  $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () => runSequence(['styles']));
-  $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () => runSequence(['media']));
-  $.watch(paths.media.src + '/sprite-images/**/*.{png,jpg}', () => runSequence(['sprite:images']));
-  $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () => runSequence(['fonts']));
-  $.watch(paths.sources + '/favicon.+(jpg|png)', () => runSequence(['favicons']));
-  $.watch('./bower_components/**/*', () => runSequence([
-    'scripts:vendors',
-    'styles:copy',
-    'media',
-    'fonts'
-  ]));
+  $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () =>
+    runSequence(['styles'])
+  );
+  $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () =>
+    runSequence(['media'])
+  );
+  $.watch(paths.media.src + '/sprite-images/**/*.{png,jpg}', () =>
+    runSequence(['sprite:images'])
+  );
+  $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () =>
+    runSequence(['fonts'])
+  );
+  $.watch(paths.sources + '/favicon.+(jpg|png)', () =>
+    runSequence(['favicons'])
+  );
 });
 
 
@@ -316,14 +298,7 @@ gulp.task('watch', () => {
  */
 
 gulp.task('build', cb => {
-  runSequence('styles:copy', [
-    'styles',
-    'scripts',
-    'scripts:vendors',
-    'fonts',
-    'media',
-    'favicons'
-  ], cb);
+  runSequence(['styles', 'scripts', 'fonts', 'media', 'favicons'], cb);
 });
 
 
@@ -383,7 +358,11 @@ gulp.task('test:accessibility', cb => {
     }
     reports.audit.forEach((report) => {
       if (report.result === 'FAIL') {
-        $.util.log(displaySeverity(report), $.util.colors.red(report.heading), report.elements);
+        $.util.log(
+          displaySeverity(report),
+          $.util.colors.red(report.heading),
+          report.elements
+        );
       }
     });
     cb();

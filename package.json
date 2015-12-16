@@ -66,5 +66,8 @@
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.5.0"
+  },
+  "dependencies": {
+    "include-media": "^1.4.1"
   }
 }
