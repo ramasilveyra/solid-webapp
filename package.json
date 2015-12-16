@@ -56,7 +56,6 @@
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "lodash": "^3.10.1",
-    "main-bower-files": "^2.9.0",
     "mocha": "^2.3.3",
     "mocha-eslint": "^1.0.0",
     "psi": "^2.0.0",
