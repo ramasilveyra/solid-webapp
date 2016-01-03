@@ -37,7 +37,7 @@
     "eslint": "^1.7.3",
     "eslint-config-airbnb": "^2.0.0",
     "eslint-plugin-react": "^3.6.3",
-    "glob": "^6.0.1",
+    "glob": "^6.0.3",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-cache": "^0.4.0",
