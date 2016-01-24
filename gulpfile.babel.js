@@ -117,7 +117,7 @@ gulp.task('styles', ['styles:lint'], () => {
     .pipe($.rename({
       suffix: '.min'
     }))
-    .pipe($.if('*.css', $.minifyCss()))
+    .pipe($.if('*.css', $.cssnano()))
     .pipe($.sourcemaps.write('../maps'))
     .pipe(gulp.dest(paths.styles.dist))
     .pipe($.if(bs.active, bs.stream({ match: '**/*.css' })));
