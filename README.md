@@ -10,7 +10,7 @@ Basic and solid boilerplate front-end for web apps.
 2. gulp.js and eslint globally installed: `npm install -g gulp eslint`.
 3. Install `scss_lint` gem: `gem install scss_lint`.
 4. Clone the repo: `git clone https://github.com/ramasilveyra/solid-webapp.git`.
-5. Run in node prompt `npm install --save-dev`.
+5. Run in node prompt `npm install`.
 6. Run `gulp` see the magic and start develop.
 
 ## Features
@@ -19,8 +19,7 @@ Basic and solid boilerplate front-end for web apps.
 * SASS and follow [Sass Guidelines](http://sass-guidelin.es/) structure
 * SASS lint with scss-lint (BEM ready)
 * CSS Autoprefixing
-* Minify CSS with [clean-css](https://github.com/jakubpawlowicz/clean-css)
-* Safely load external fonts to avoid FOIT
+* Minify
 * Sourcemaps
 
 ### JavaScript

@@ -24,6 +24,9 @@
     "start": "gulp watch serve",
     "test": "mocha --compilers js:babel-core/register && gulp styles:lint"
   },
+  "engines" : {
+    "node" : ">=4.0.0"
+  },
   "private": true,
   "devDependencies": {
     "a11y": "^0.4.0",

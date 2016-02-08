@@ -1,42 +1,45 @@
+import path from 'path';
+
 // Paths for all common dirs, change to fit your needs
-export const paths = {
-  src: './src',
-  dist: './dist'
+const paths = {
+  src: path.join(__dirname, 'src'),
+  dist: path.join(__dirname, 'dist'),
 };
+paths.public = path.join(paths.dist, 'public');
 paths.assets = {
-  src: paths.src + '/assets',
-  dist: paths.dist + '/assets'
+  src: path.join(paths.src, 'assets'),
+  dist: path.join(paths.dist, 'assets'),
 };
 paths.scripts = {
-  src: paths.assets.src + '/scripts',
-  dist: paths.assets.dist + '/scripts'
+  src: path.join(paths.assets.src, 'scripts'),
+  dist: path.join(paths.assets.dist, 'scripts'),
 };
 paths.styles = {
-  src: paths.assets.src + '/styles',
-  dist: paths.assets.dist + '/styles'
+  src: path.join(paths.assets.src, 'styles'),
+  dist: path.join(paths.assets.dist, 'styles'),
 };
 paths.media = {
-  src: paths.assets.src + '/media',
-  dist: paths.assets.dist + '/media'
+  src: path.join(paths.assets.src, 'media'),
+  dist: path.join(paths.assets.dist, 'media'),
 };
 paths.fonts = {
-  src: paths.assets.src + '/fonts',
-  dist: paths.assets.dist + '/fonts'
+  src: path.join(paths.assets.src, 'fonts'),
+  dist: path.join(paths.assets.dist, 'fonts'),
 };
-paths.sources = paths.assets.src + '/sources';
-paths.favicons = paths.media.dist + '/favicons/';
+paths.sources = path.join(paths.assets.src, 'sources');
+paths.favicons = path.join(paths.media.dist, 'favicons/');
 
 // Bundles for browserify
-export const bundles = [
-  /*{
-    entries: [paths.src + '/app/components/menu.jsx'],
-    output: 'menu.js',
-    extensions: ['.jsx'],
-    destination: paths.dist + '/app/components/'
-  },*/ {
-    entries: [paths.scripts.src + '/main.js'],
+const bundles = [
+  {
+    entries: [path.join(paths.scripts.src, 'main.js')],
     output: 'main.min.js',
     extensions: ['.js', '.json'],
     destination: paths.scripts.dist
   }
 ];
+
+export {
+  paths,
+  bundles,
+};
