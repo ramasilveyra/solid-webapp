@@ -1,12 +1,12 @@
-/*eslint-env mocha */
+/* eslint-env mocha  */
 
-import {paths} from '../config.js';
+import { paths } from '../config.js';
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 
-const relativePath = paths.favicons.replace(paths.dist + '/', '');
+const relativePath = paths.favicons.replace(`${paths.dist}/`, '');
 const expectedFilesInDistDir = [
   'apple-touch-icon.png',
   'browserconfig.xml',
@@ -17,31 +17,31 @@ const expectedFilesInDistDir = [
   'manifest.webapp',
   'robots.txt',
   'yandex-browser-manifest.json',
-  relativePath + 'android-chrome-36x36.png',
-  relativePath + 'android-chrome-48x48.png',
-  relativePath + 'android-chrome-72x72.png',
-  relativePath + 'android-chrome-96x96.png',
-  relativePath + 'android-chrome-144x144.png',
-  relativePath + 'android-chrome-192x192.png',
-  relativePath + 'firefox_app_60x60.png',
-  relativePath + 'firefox_app_128x128.png',
-  relativePath + 'firefox_app_512x512.png',
-  relativePath + 'mstile-70x70.png',
-  relativePath + 'mstile-144x144.png',
-  relativePath + 'mstile-150x150.png',
-  relativePath + 'mstile-310x150.png',
-  relativePath + 'mstile-310x310.png',
-  relativePath + 'open-graph.png',
-  relativePath + 'yandex-browser-50x50.png'
+  `${relativePath}android-chrome-36x36.png`,
+  `${relativePath}android-chrome-48x48.png`,
+  `${relativePath}android-chrome-72x72.png`,
+  `${relativePath}android-chrome-96x96.png`,
+  `${relativePath}android-chrome-144x144.png`,
+  `${relativePath}android-chrome-192x192.png`,
+  `${relativePath}firefox_app_60x60.png`,
+  `${relativePath}firefox_app_128x128.png`,
+  `${relativePath}firefox_app_512x512.png`,
+  `${relativePath}mstile-70x70.png`,
+  `${relativePath}mstile-144x144.png`,
+  `${relativePath}mstile-150x150.png`,
+  `${relativePath}mstile-310x150.png`,
+  `${relativePath}mstile-310x310.png`,
+  `${relativePath}open-graph.png`,
+  `${relativePath}yandex-browser-50x50.png`
 ];
 
 
 function checkFiles(directory, expectedFiles) {
   // Get the list of files from the specified directory
   const files = glob.sync('**/*', {
-    'cwd': directory,
-    'dot': true,      // include hidden files
-    'mark': true      // add a `/` character to directory matches
+    cwd: directory,
+    dot: true, // include hidden files
+    mark: true // add a `/` character to directory matches
   });
 
   // Check if all expected files are present in the
@@ -77,4 +77,4 @@ function checkFiles(directory, expectedFiles) {
       checkFiles(paths.dist, expectedFilesInDistDir);
     });
   });
-})();
+}());

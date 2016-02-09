@@ -1,7 +1,6 @@
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
-import fs from 'fs';
 import runSequence from 'run-sequence';
 import sprity from 'sprity';
 import a11y from 'a11y';
@@ -15,9 +14,9 @@ import partialImport from 'postcss-partial-import';
 import reporter from 'postcss-reporter';
 import cssnext from 'postcss-cssnext';
 import stylelint from 'stylelint';
-import {assign} from 'lodash';
-import {output as pagespeed} from 'psi';
-import {paths, bundles} from './config.js';
+import { assign } from 'lodash';
+import { output as pagespeed } from 'psi';
+import { paths, bundles } from './config.js';
 import pkg from './package.json';
 
 const $ = gulpLoadPlugins();
@@ -72,7 +71,7 @@ const createBundle = options => {
 };
 
 gulp.task('scripts', ['scripts:lint'], () =>
-  bundles.forEach( bundle =>
+  bundles.forEach(bundle =>
     createBundle({
       entries: bundle.entries,
       output: bundle.output,
@@ -86,7 +85,7 @@ gulp.task('scripts', ['scripts:lint'], () =>
 // Lint JavaScript
 gulp.task('scripts:lint', () =>
   gulp.src([
-    paths.src + '/**/*.+(jsx|js)',
+    `${paths.src}/**/*.+(jsx|js)`,
     `!${paths.scripts.src}/vendors/*.js`
   ])
     .pipe($.eslint())
@@ -100,7 +99,7 @@ gulp.task('scripts:lint', () =>
 
 // Compile CSS, prefix stylesheets, minfy and generate sourcemaps
 gulp.task('styles', ['styles:lint'], () =>
-  gulp.src(paths.styles.src + '/*.css')
+  gulp.src(`${paths.styles.src}/*.css`)
     .pipe($.sourcemaps.init())
     .pipe($.postcss([
       partialImport,
@@ -118,7 +117,7 @@ gulp.task('styles', ['styles:lint'], () =>
 // Lint CSS files
 gulp.task('styles:lint', () =>
   gulp.src([
-    paths.styles.src + '/**/*.css',
+    `${paths.styles.src}/**/*.css`,
     `!${paths.styles.src}/vendors/*`
   ])
     .pipe($.postcss([
@@ -134,7 +133,7 @@ gulp.task('styles:lint', () =>
 
 gulp.task('media', () =>
   gulp.src([
-    paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)',
+    `${paths.media.src}/**/*.+(png|jpg|jpeg|gif|svg)`,
     `!${paths.media.src}/sprite-images/**/*.{png,jpg}`
   ])
     .pipe($.cache($.imagemin({
@@ -152,14 +151,14 @@ gulp.task('media', () =>
 // generate sprite.png and _sprite.scss
 gulp.task('sprite:images', () =>
   sprity.src({
-    src: paths.media.src + '/sprite-images/**/*.{png,jpg}',
+    src: `${paths.media.src}/sprite-images/**/*.{png,jpg}`,
     style: './sprite.css',
     processor: 'sass'
   })
   .pipe($.if(
     '*.png',
     gulp.dest(paths.media.dist),
-    gulp.dest(paths.styles.src + '/vendors')
+    gulp.dest(`${paths.styles.src}/vendors`)
   ))
 );
 
@@ -169,7 +168,7 @@ gulp.task('sprite:images', () =>
 
 gulp.task('fonts', () =>
   gulp.src([
-    paths.fonts.src + '/*.+(ttf|otf|woff|woff2|eot|svg)'
+    `${paths.fonts.src}/*.+(ttf|otf|woff|woff2|eot|svg)`
   ])
     .pipe(gulp.dest(paths.fonts.dist))
 );
@@ -185,14 +184,14 @@ gulp.task('favicons', cb => {
 
 // Generates all favicons images and files
 gulp.task('favicons:generator', () =>
-  gulp.src(paths.sources + '/favicon.jpg')
+  gulp.src(`${paths.sources}/favicon.jpg`)
     .pipe($.favicons({
       appName: pkg.name,
       appDescription: pkg.description,
       developerName: pkg.author.name,
       developerURL: pkg.author.url,
       background: '#ffffff',
-      path: paths.favicons.replace(paths.dist + '/', ''),
+      path: paths.favicons.replace(`${paths.dist}/`, ''),
       url: pkg.homepage,
       display: 'standalone',
       orientation: 'portrait',
@@ -218,9 +217,9 @@ gulp.task('favicons:copy', () =>
 gulp.task('favicons:trash', cb => {
   const copyArray = rootFavicons;
   copyArray.push(
-    paths.favicons + 'apple-touch-icon*.png',
-    paths.favicons + 'favicon-*.png',
-    paths.dist + '/meta.html'
+    `${paths.favicons}apple-touch-icon*.png`,
+    `${paths.favicons}favicon-*.png`,
+    `${paths.dist}/meta.html`
   );
   del(rootFavicons).then(() => cb());
 });
@@ -239,24 +238,24 @@ gulp.task('serve', () => {
     online: false
   });
   $.watch([
-    paths.media.dist + '/**/*',
-    paths.fonts.dist + '/**/*',
-    paths.dist + '/**/*.+(php|py|rb|js|html)'
+    `${paths.media.dist}/**/*`,
+    `${paths.fonts.dist}/**/*`,
+    `${paths.dist}/**/*.+(php|py|rb|js|html)`
   ], bs.reload);
 });
 
 // Generate secure tunnnel to your localhost
 gulp.task('serve:tunnel', () => {
-  const bsTunnel = browserSync.create(pkg.name + '-tunnel');
+  const bsTunnel = browserSync.create(`${pkg.name}-tunnel`);
   bsTunnel.init({
     proxy: 'localhost/',
     startPath: pkg.name + paths.dist.slice(1),
-    logPrefix: pkg.name + '-tunnel',
+    logPrefix: `${pkg.name}-tunnel`,
     tunnel: true,
     online: true,
     open: 'tunnel'
-  }, (err, bs) => {
-    tunnelUrl = bs.tunnel.url + pkg.name + paths.dist.slice(1);
+  }, (err, _bs) => {
+    tunnelUrl = _bs.tunnel.url + pkg.name + paths.dist.slice(1);
   });
 });
 
@@ -268,19 +267,19 @@ gulp.task('serve:tunnel', () => {
 gulp.task('watch', () => {
   isWatchify = true;
   runSequence(['scripts']);
-  $.watch(paths.styles.src + '/**/*.+(css|scss|sass)', () =>
+  $.watch(`${paths.styles.src}/**/*.+(css|scss|sass)`, () =>
     runSequence(['styles'])
   );
-  $.watch(paths.media.src + '/**/*.+(png|jpg|jpeg|gif|svg)', () =>
+  $.watch(`${paths.media.src}/**/*.+(png|jpg|jpeg|gif|svg)`, () =>
     runSequence(['media'])
   );
-  $.watch(paths.media.src + '/sprite-images/**/*.{png,jpg}', () =>
+  $.watch(`${paths.media.src}/sprite-images/**/*.{png,jpg}`, () =>
     runSequence(['sprite:images'])
   );
-  $.watch(paths.fonts.src + '/**/*.+(ttf|otf|woff|woff2|eot|svg)', () =>
+  $.watch(`${paths.fonts.src}/**/*.+(ttf|otf|woff|woff2|eot|svg)`, () =>
     runSequence(['fonts'])
   );
-  $.watch(paths.sources + '/favicon.+(jpg|png)', () =>
+  $.watch(`${paths.sources}/favicon.+(jpg|png)`, () =>
     runSequence(['favicons'])
   );
 });
@@ -336,17 +335,17 @@ gulp.task('test:accessibility', cb => {
   function displaySeverity(report) {
     let _return;
     if (report.severity === 'Severe') {
-      _return = $.util.colors.red('[' + report.severity + '] ');
+      _return = $.util.colors.red(`[${report.severity}] `);
     } else if (report.severity === 'Warning') {
-      _return = $.util.colors.yellow('[' + report.severity + '] ');
+      _return = $.util.colors.yellow(`[${report.severity}] `);
     } else {
-      _return = '[' + report.severity + '] ';
+      _return = `[${report.severity}] `;
     }
     return _return;
   }
-  a11y('localhost/' + pkg.name + paths.dist.slice(1), (err, reports) => {
+  a11y(`localhost/${pkg.name}${paths.dist.slice(1)}`, (err, reports) => {
     if (err) {
-      $.util.log($.util.colors.red('gulp a11y error: ' + err));
+      $.util.log($.util.colors.red(`gulp a11y error: ${err}`));
       return cb(err);
     }
     reports.audit.forEach((report) => {
