@@ -11,6 +11,10 @@ import watchify from 'watchify';
 import babelify from 'babelify';
 import source from 'vinyl-source-stream';
 import buffer from 'vinyl-buffer';
+import partialImport from 'postcss-partial-import';
+import reporter from 'postcss-reporter';
+import cssnext from 'postcss-cssnext';
+import stylelint from 'stylelint';
 import {assign} from 'lodash';
 import {output as pagespeed} from 'psi';
 import {paths, bundles} from './config.js';
@@ -91,47 +95,36 @@ gulp.task('scripts:lint', () =>
 
 
 /**
- * Tasks for SASS
+ * Tasks for CSS
  */
 
-// Compile SASS, prefix stylesheets, minfy and generate sourcemaps
-gulp.task('styles', ['styles:lint'], () => {
-  const AUTOPREFIXER_BROWSERS = [
-    'ie >= 9',
-    'ie_mob >= 10',
-    'ff >= 30',
-    'chrome >= 30',
-    'safari >= 5',
-    'opera >= 12.1',
-    'ios >= 6',
-    'android >= 2.3',
-    'bb >= 10'
-  ];
-
-  return gulp.src(paths.styles.src + '/*.scss')
+// Compile CSS, prefix stylesheets, minfy and generate sourcemaps
+gulp.task('styles', ['styles:lint'], () =>
+  gulp.src(paths.styles.src + '/*.css')
     .pipe($.sourcemaps.init())
-    .pipe($.sass({
-      precision: 10
-    }).on('error', $.sass.logError))
-    .pipe($.autoprefixer({ browsers: AUTOPREFIXER_BROWSERS }))
+    .pipe($.postcss([
+      partialImport,
+      cssnext
+    ]))
     .pipe($.rename({
       suffix: '.min'
     }))
     .pipe($.if('*.css', $.cssnano()))
     .pipe($.sourcemaps.write('../maps'))
     .pipe(gulp.dest(paths.styles.dist))
-    .pipe($.if(bs.active, bs.stream({ match: '**/*.css' })));
-});
+    .pipe($.if(bs.active, bs.stream({ match: '**/*.css' })))
+);
 
-// Lint SASS files
+// Lint CSS files
 gulp.task('styles:lint', () =>
   gulp.src([
-    paths.styles.src + '/**/*.scss',
-    `!${paths.styles.src}/vendors/*.scss`
+    paths.styles.src + '/**/*.css',
+    `!${paths.styles.src}/vendors/*`
   ])
-    .pipe($.scssLint({
-      'config': '.scss-lint.yml'
-    }))
+    .pipe($.postcss([
+      stylelint(),
+      reporter({ clearMessages: true })
+    ]))
 );
 
 
@@ -150,7 +143,7 @@ gulp.task('media', () =>
       optimizationLevel: 7,
       // don't remove IDs from SVGs, they are often used
       // as hooks for embedding and styling
-      svgoPlugins: [{cleanupIDs: false}]
+      svgoPlugins: [{ cleanupIDs: false }]
     })))
     .pipe(gulp.dest(paths.media.dist))
 );

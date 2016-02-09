@@ -1,1 +1,19 @@
+# Dependency directory
 node_modules
+
+# Logs
+npm-debug.log*
+
+# Build
+dist/apple-touch-icon.png
+dist/browserconfig.xml
+dist/crossdomain.xml
+dist/favicon.ico
+dist/manifest.json
+dist/manifest.webapp
+dist/yandex-browser-manifest.json
+dist/assets/fonts
+dist/assets/maps
+dist/assets/media
+dist/assets/scripts/main.min.js
+dist/assets/styles
