@@ -9,7 +9,6 @@ import glob from 'glob';
 const relativePath = paths.favicons.replace(`${paths.dist}/`, '');
 const expectedFilesInDistDir = [
   'apple-touch-icon.png',
-  'browserconfig.xml',
   'crossdomain.xml',
   'favicon.ico',
   'humans.txt',
@@ -26,11 +25,6 @@ const expectedFilesInDistDir = [
   `${relativePath}firefox_app_60x60.png`,
   `${relativePath}firefox_app_128x128.png`,
   `${relativePath}firefox_app_512x512.png`,
-  `${relativePath}mstile-70x70.png`,
-  `${relativePath}mstile-144x144.png`,
-  `${relativePath}mstile-150x150.png`,
-  `${relativePath}mstile-310x150.png`,
-  `${relativePath}mstile-310x310.png`,
   `${relativePath}open-graph.png`,
   `${relativePath}yandex-browser-50x50.png`
 ];

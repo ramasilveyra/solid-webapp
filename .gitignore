@@ -6,8 +6,6 @@ npm-debug.log*
 
 # Build
 dist/apple-touch-icon.png
-dist/browserconfig.xml
-dist/crossdomain.xml
 dist/favicon.ico
 dist/manifest.json
 dist/manifest.webapp
