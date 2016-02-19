@@ -37,7 +37,7 @@
     "browser-sync": "^2.9.11",
     "browserify": "^13.0.0",
     "del": "^2.0.2",
-    "eslint": "^2.0.0",
+    "eslint": "^2.2.0",
     "eslint-config-airbnb": "^5.0.0",
     "eslint-plugin-react": "^3.6.3",
     "glob": "^7.0.0",
