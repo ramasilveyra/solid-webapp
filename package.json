@@ -39,7 +39,7 @@
     "del": "^2.0.2",
     "eslint": "^2.0.0",
     "eslint-config-airbnb": "^6.0.1",
-    "eslint-plugin-react": "^4.0.0",
+    "eslint-plugin-react": "^6.0.0",
     "glob": "^7.0.0",
     "gulp": "^3.9.0",
     "gulp-cache": "^0.4.0",
