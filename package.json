@@ -57,7 +57,7 @@
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "lodash": "^4.4.0",
-    "mocha": "^2.3.3",
+    "mocha": "^3.0.2",
     "mocha-eslint": "^2.0.0",
     "postcss-cssnext": "^2.4.0",
     "postcss-partial-import": "^2.0.0",
