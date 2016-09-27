@@ -55,7 +55,7 @@
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.7",
-    "gulp-watch": "^4.3.5",
+    "gulp-watch": "^4.3.10",
     "lodash": "^4.4.0",
     "mocha": "^2.3.3",
     "mocha-eslint": "^3.0.1",
