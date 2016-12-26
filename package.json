@@ -54,7 +54,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
+    "gulp-util": "^3.0.8",
     "gulp-watch": "^4.3.5",
     "lodash": "^4.4.0",
     "mocha": "^2.3.3",
