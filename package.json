@@ -31,14 +31,14 @@
   "devDependencies": {
     "a11y": "^0.4.0",
     "babel-core": "^6.14.0",
-    "babel-eslint": "^6.0.0",
+    "babel-eslint": "^7.1.1",
     "babel-preset-es2015": "^6.14.0",
     "babelify": "^7.0.2",
     "browser-sync": "^2.16.0",
     "browserify": "^13.0.0",
     "del": "^2.0.2",
     "eslint": "^3.5.0",
-    "eslint-config-airbnb": "^6.0.1",
+    "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-react": "^6.2.2",
     "glob": "^7.0.6",
     "gulp": "^3.9.0",
@@ -57,22 +57,22 @@
     "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.5",
     "lodash": "^4.17.4",
-    "mocha": "^2.3.3",
+    "mocha": "^3.2.0",
     "mocha-eslint": "^3.0.1",
     "postcss-cssnext": "^2.8.0",
-    "postcss-partial-import": "^2.0.0",
-    "postcss-reporter": "^1.3.1",
+    "postcss-partial-import": "^3.1.0",
+    "postcss-reporter": "^3.0.0",
     "psi": "^2.0.0",
     "run-sequence": "^1.1.4",
     "sprity": "^1.0.7",
     "sprity-sass": "^1.0.4",
     "stylelint": "^7.2.0",
-    "stylelint-config-standard": "^13.0.0",
+    "stylelint-config-standard": "^15.0.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.5.0"
   },
   "dependencies": {
-    "normalize.css": "^4.0.0"
+    "normalize.css": "^5.0.0"
   }
 }
