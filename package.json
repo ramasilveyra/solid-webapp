@@ -60,7 +60,7 @@
     "mocha": "^3.2.0",
     "mocha-eslint": "^3.0.1",
     "postcss-cssnext": "^2.8.0",
-    "postcss-partial-import": "^3.1.0",
+    "postcss-partial-import": "3.1.0",
     "postcss-reporter": "^3.0.0",
     "psi": "^2.0.0",
     "run-sequence": "^1.1.4",
