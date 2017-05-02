@@ -73,6 +73,6 @@
     "watchify": "^3.5.0"
   },
   "dependencies": {
-    "normalize.css": "^5.0.0"
+    "normalize.css": "^7.0.0"
   }
 }
